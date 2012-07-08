@@ -49,16 +49,24 @@ namespace stumpd {
       Lacewing::Webserver *dotcom_webserver;
       Lacewing::Thread *dotcom_httpd_thread;
       authentication *auth;
+
       void
       page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
+      
+      // Beginning of API method definitions
+      
       int
       api_login(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
+      
       int
       api_logout(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
+      
       int
       api_search(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
+      
       int
       api_insert_data(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
+      
       void
       api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
       
