@@ -1,0 +1,20 @@
+body
+{
+ /*background-image:url('/images/lighthouse-s.jpg');
+ background-size: 100%
+ background-repeat:no-repeat;
+ */
+ background: #46483E
+ font-size: 12px;
+ line-height: 180%;
+ font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif;
+}
+
+div._loginBox
+{
+ float : right;
+ width : auto;
+ background : #ffffff;
+ border : solid;
+}
+
