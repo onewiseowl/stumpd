@@ -10,6 +10,8 @@
 #include <semaphore.h>
 #include <mysql++.h>
 
+#define DB_TYPE "mysql"
+
 namespace stumpd
 {
 namespace database
@@ -87,50 +89,53 @@ namespace database
 
   };
 
-template<typename T>
-std::vector <std::vector <std::string> > mysql::query(T query_string)
-//std::vector <std::vector <std::string> > stumpd::database::query(std::string query_string)
-{
-  //std::vector <std::vector <std::string> > data_buf = this->cache.ask(query_string);
-  std::vector <std::vector <std::string> > data_buf;
-  if(data_buf.size() > 0)
+  template<typename T>
+  std::vector <std::vector <std::string> > mysql::query(T query_string)
+  //std::vector <std::vector <std::string> > stumpd::database::query(std::string query_string)
   {
-    // we found some relevant dater, so populate the
-    // data_buf and return the goodies
-    std::cout << "We found cached dater..." << data_buf.size() << std::endl;
-    return data_buf;
-  } else {
-    mysqlpp::Connection *db_con = this->pool.grab();
-    std::cout << "Connection db_con addr: " << &db_con << std::endl;
-    if(db_con->connected() == true)
+    //std::vector <std::vector <std::string> > data_buf = this->cache.ask(query_string);
+    std::vector <std::vector <std::string> > data_buf;
+    if(data_buf.size() > 0)
     {
-      mysqlpp::Query query = db_con->query(query_string);
-      mysqlpp::StoreQueryResult results = query.store();
-      //this->pool[db_fd_i].unlock();
-      unsigned int i;
-      unsigned int r;
-      unsigned int c;
-      unsigned int ci;
-      r = results.num_rows();
-      data_buf.resize(r);
-      if(r>0)
-        c = results[0].size();
-      for(i=0;i<r;i++)
-      {
-        for(ci=0;ci<c;ci++)
-        {
-          data_buf[i].push_back((std::string)results[i][ci]);
-        }
-      }
-      this->pool.release(db_con);
+      // we found some relevant dater, so populate the
+      // data_buf and return the goodies
+      std::cout << "We found cached dater..." << data_buf.size() << std::endl;
       return data_buf;
     } else {
-      std::cerr << "Failed to establish db descriptor lock, punting query" << std::endl;
-      this->pool.release(db_con);
-      return data_buf;
+      mysqlpp::Connection *db_con = this->pool.grab();
+      std::cout << "Connection db_con addr: " << &db_con << std::endl;
+      if(db_con->connected() == true)
+      {
+        mysqlpp::Query query = db_con->query(query_string);
+        mysqlpp::StoreQueryResult results = query.store();
+        //this->pool[db_fd_i].unlock();
+        unsigned int i;
+        unsigned int r;
+        unsigned int c;
+        unsigned int ci;
+        r = results.num_rows();
+        data_buf.resize(r);
+        if(r>0)
+          c = results[0].size();
+        for(i=0;i<r;i++)
+        {
+          for(ci=0;ci<c;ci++)
+          {
+            data_buf[i].push_back((std::string)results[i][ci]);
+          }
+        }
+        this->pool.release(db_con);
+        return data_buf;
+      } else {
+        std::cerr << "Failed to establish db descriptor lock, punting query" << std::endl;
+        this->pool.release(db_con);
+        return data_buf;
+      }
     }
   }
-}
+
+  static mysql *mysql_conn;
+
 }
 }
 
