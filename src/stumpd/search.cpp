@@ -22,13 +22,13 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
     struct tm *to_date_buf;
 
     char *year;
-    year = (char *)calloc(sizeof(char), 5);
+    year = (char *)calloc(sizeof(char), 20);
     char *year_month_day;
-    year_month_day = (char *)calloc(sizeof(char), 5);
+    year_month_day = (char *)calloc(sizeof(char), 20);
     char *epoch_from;
-    epoch_from = (char *)calloc(sizeof(char), 11);
+    epoch_from = (char *)calloc(sizeof(char), 20);
     char *epoch_to;
-    epoch_to = (char *)calloc(sizeof(char), 11);
+    epoch_to = (char *)calloc(sizeof(char), 20);
 
     int date_diff;
     date_diff =  ((to_date - from_date) / 86400);
