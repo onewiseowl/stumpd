@@ -18,6 +18,11 @@ stumpd::dotcom::api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request
     fprintf(stdout, "About to execute api_search\n");
     this->api_search(Webserver, Request);
   } else
+  if(strcmp(Request.POST("action"), "insert") == 0)
+  {
+    fprintf(stdout, "About to execute api_insert\n");
+    this->api_insert(Webserver, Request);
+  } else
   if(strcmp(Request.POST("action"), "login") == 0)
   {
     this->api_login(Webserver, Request);

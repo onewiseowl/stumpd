@@ -65,6 +65,9 @@ namespace stumpd {
       api_search(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
       
       int
+      api_insert(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
+
+      int
       api_insert_data(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
       
       void
