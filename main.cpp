@@ -10,9 +10,15 @@
 #include <stumpd/load_config.hpp>
 #include <stumpd/database/mysql.hpp>
 #include <stumpd/global_fs/global_fs.hpp>
+
+// establish db connection
+extern stumpd::database::mysql *mysql_conn =
+  new stumpd::database::mysql();
+
 #include <stumpd/dotcom/dotcom.hpp>
 #include <stumpd/authentication/authentication.hpp>
 #include <stumpd/search.hpp>
+
 
 int
 main( int argc, char **argv )
@@ -32,29 +38,28 @@ main( int argc, char **argv )
   // start distribution queue
   //stumpd::distribution_queue dqueue;
 
-  // establish db connection
-  stumpd::database::mysql_conn =
-    new stumpd::database::mysql();
+
+  fprintf(stdout, "*stumpd::database::myql_conn = %0x%x\n", mysql_conn);
 
   // start main front end dotcom site
   stumpd::dotcom stumpd_dotcom;
 
-  std::vector <std::vector <std::string> > rows =stumpd::database::mysql_conn->query("show databases;");
-  std::cout << "count: " << rows.size() << std::endl;
-  std::cout << "rows[0].size: " << rows[0].size() << std::endl;
-  std::cout << "rows[0][rows[0].size()]: " << rows[0][rows[0].size()-1] << std::endl;
+  //std::vector <std::vector <std::string> > rows =stumpd::database::mysql_conn->query("show databases;");
+  //std::cout << "count: " << rows.size() << std::endl;
+  //std::cout << "rows[0].size: " << rows[0].size() << std::endl;
+  //std::cout << "rows[0][rows[0].size()]: " << rows[0][rows[0].size()-1] << std::endl;
 
-  std::vector <std::string> test;
+  //std::vector <std::string> test;
 
-  stumpd::search search;
-  search.query(time(NULL) - 86400, time(NULL), test, test, "+\"dogturds\"");
+  //stumpd::search search;
+  //search.query(time(NULL) - 86400, time(NULL), test, test, "+\"dogturds\"");
 
   while(1)
   {
     sleep(1);
   }
 
-  delete(stumpd::database::mysql_conn);
+  delete(mysql_conn);
 
   return 0;
 }

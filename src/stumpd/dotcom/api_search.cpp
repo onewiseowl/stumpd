@@ -1,28 +1,32 @@
 #include <stumpd/dotcom/dotcom.hpp>
+#include <stumpd/search.hpp>
 
 int
 stumpd::dotcom::api_search(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request)
 {
+
+  fprintf(stdout, "API Search executed...\n");
+
   int ret;
   ret = 0;
   
-  unsigned long int from_date;
+  time_t from_date;
   from_date = 0;
   
-  unsigned long int to_date;
+  time_t to_date;
   to_date = 0;
   
-  std::string data_source;
+  std::vector <std::string> sources;
 
-  std::string data_source_host;
+  std::vector <std::string> hosts;
   
-  std::string search_query;
+  std::string query_string;
   
   
-  if(strlen(Request.POST("search_query")) > 0)
+  if(strlen(Request.POST("query_string")) > 0)
   {
   
-    search_query = Request.POST("search_query");
+    query_string = Request.POST("query_string");
   
     if(strlen(Request.POST("from_date")) > 0)
     {
@@ -34,32 +38,40 @@ stumpd::dotcom::api_search(Lacewing::Webserver &Webserver, Lacewing::Webserver::
         to_date = 
           strtoul(Request.POST("to_date"), NULL, 0);
           
-        if(strlen(Request.POST("data_source")) > 0)
+        if(strlen(Request.POST("sources")) > 0)
         {
-          data_source = Request.POST("data_source");
+          sources = stumpd::utilities::split(Request.POST("sources"), ',');
           
-          if(strlen(Request.POST("data_source_host")) > 0)
+          if(strlen(Request.POST("hosts")) > 0)
           {
-            data_source_host = Request.POST("data_source_host");
+            hosts = stumpd::utilities::split(Request.POST("hosts"), ',');
+            fprintf(stdout, "hosts: %s\n", hosts[0].c_str());
+          } else {
+            fprintf(stderr, "No hosts\n");
           }
+
+          stumpd::search search;
+
+          std::string json_return =
+            search.json_query(from_date, to_date, hosts, sources, query_string);
+
+          fprintf(stdout, "search.json_query returned :)\n");
+
+          Request.Send(json_return.c_str());          
+
+          return 0;
+        } else {
+          fprintf(stderr, "No sources\n");
         }
       } else {
+        fprintf(stderr, "No to_date\n");
         return 1;
       }
     } else {
+      fprintf(stderr, "No from_date\n");
       return 1;
     }
   }
-  
-  fprintf(
-    stdout,
-    "search got called, here are the vars: \n %ld\n%ld\n%s\n%s\n%s\n\n",
-    from_date,
-    to_date,
-    data_source.c_str(),
-    data_source_host.c_str(),
-    search_query.c_str()
-  );
-  
+  fprintf(stdout, "query_string was empty :(\n");
   return 0;
 }

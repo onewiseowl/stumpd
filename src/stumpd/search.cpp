@@ -1,6 +1,8 @@
 
 #include <stumpd/search.hpp>
 
+extern stumpd::database::mysql *mysql_conn;
+
 std::vector <std::vector <std::string> >
 stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string> hosts, std::vector <std::string> sources, std::string query_string)
 {
@@ -15,6 +17,8 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
 
   if(strcmp(DB_TYPE, "mysql") == 0)
   {
+
+    fprintf(stdout, "*stumpd::database::myql_conn = %0x%x\n", mysql_conn);
     
     std::string mysql_query_string;
 
@@ -53,8 +57,7 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
     {
       mysql_query_string
         .append("(SELECT * FROM ")
-        .append(DB_NAME)
-        .append(".documents_")
+        .append("documents_")
         .append(year)
         .append(".")
         .append(year_month_day);
@@ -98,12 +101,12 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
         {
           mysql_query_string
             .append(" host in (\"")
-            .append(sources[b])
+            .append(hosts[b])
             .append("\"");
         } else {
           mysql_query_string
             .append(",\"")
-            .append(sources[b])
+            .append(hosts[b])
             .append("\"");
         }
         mysql_query_string
@@ -142,6 +145,9 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
 
     }
 
+    query_results =
+      mysql_conn->query(mysql_query_string.c_str());
+
     free(year);
     free(year_month_day);
     free(epoch_from);
@@ -153,4 +159,46 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
      fprintf(stdout, "CLucene is not yet supported...\n");
      return query_results;
    }
+}
+
+std::string
+stumpd::search::json_query(time_t from_date, time_t to_date, std::vector <std::string> hosts, std::vector <std::string> sources, std::string query_string)
+{
+  std::vector <std::vector <std::string> > search_return;
+  std::string json_string("([");
+  size_t a;
+  size_t b;
+
+  search_return = this->query(from_date, to_date, hosts, sources, query_string);
+
+  if(search_return.size() > 0)
+  {
+    // table rows are as follows
+    // id | date | host | source | data
+    for(a=0;a<search_return.size();a++)
+    {
+      json_string
+        .append("{date:\"")
+        .append(search_return[a][1])
+        .append("\",host:\"")
+        .append(search_return[a][2])
+        .append("\",source:\"")
+        .append(search_return[a][3])
+        .append("\",content:\"")
+        .append(search_return[a][4])
+        .append("\"}");
+
+      if(a < search_return.size() - 1 && search_return.size() > 1)
+        json_string.append(",");
+    }
+
+    json_string.append("])");
+
+    fprintf(stdout, "json_string: %s\n", json_string.c_str());
+    return json_string;
+  } else {
+    fprintf(stderr, "search_return.size(): %ld\n", search_return.size());
+    return std::string("([])");
+  }
+
 }

@@ -1,4 +1,5 @@
 #ifndef DATABASE_HEADER
+#define DATABASE_HEADER
 
 #include <iostream>
 #include <vector>
@@ -134,11 +135,11 @@ namespace database
     }
   }
 
-  static mysql *mysql_conn;
+  //static mysql *mysql_conn;
 
 }
 }
 
+//static stumpd::database::mysql *mysql_conn;
 
-#define DATABASE_HEADER
 #endif

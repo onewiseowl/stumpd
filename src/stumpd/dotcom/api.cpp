@@ -3,6 +3,9 @@
 void
 stumpd::dotcom::api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request)
 {
+
+  fprintf(stdout, "Executing API function...\n");
+
   // This is just a test response
   if(strcmp(Request.POST("action"), "getSources") == 0)
   {
@@ -12,6 +15,7 @@ stumpd::dotcom::api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request
 
   if(strcmp(Request.POST("action"), "search") == 0)
   {
+    fprintf(stdout, "About to execute api_search\n");
     this->api_search(Webserver, Request);
   } else
   if(strcmp(Request.POST("action"), "login") == 0)

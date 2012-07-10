@@ -80,7 +80,7 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
     if(strncmp(Request.URL(), "api", 3) == 0)
     {
       // placeholder for dotcom API functionality (mostly just for upload/login etc)
-      //fprintf(stdout, "API was hit, full url is: %s\n", Request.URL());
+      fprintf(stdout, "API was hit, full url is: %s\n", Request.URL());
       
       // We leave it up to the API to set Request.Status
       this->api(Webserver, Request);
