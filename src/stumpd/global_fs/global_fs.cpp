@@ -33,7 +33,7 @@ namespace stumpd {
       //int i;
       //for(i=0;i<(int)GetParams.size();i++)
         //Request.Send(std::string("GET param: ").append(GetParams[i]).append("\n").c_str());
-      Request.Send("Yeah, session is NULL\n");
+      Request.Write("Yeah, session is NULL\n");
     }
 
     Request.Finish();

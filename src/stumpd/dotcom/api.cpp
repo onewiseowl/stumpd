@@ -4,23 +4,22 @@ void
 stumpd::dotcom::api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request)
 {
 
-  fprintf(stdout, "Executing API function...\n");
+  //fprintf(stdout, "Executing API function...\n");
 
   // This is just a test response
   if(strcmp(Request.POST("action"), "getSources") == 0)
   {
-    Request.Send("[{\"/var/www/verifi/logs/stuff/stuff.log\", \"/var/log/auth.log\"}]");
+    Request.Write("[{\"/var/www/verifi/logs/stuff/stuff.log\", \"/var/log/auth.log\"}]");
     return;
   }
 
   if(strcmp(Request.POST("action"), "search") == 0)
   {
-    fprintf(stdout, "About to execute api_search\n");
     this->api_search(Webserver, Request);
   } else
   if(strcmp(Request.POST("action"), "insert") == 0)
   {
-    fprintf(stdout, "About to execute api_insert\n");
+    //fprintf(stdout, "About to execute api_insert\n");
     this->api_insert(Webserver, Request);
   } else
   if(strcmp(Request.POST("action"), "login") == 0)
@@ -32,6 +31,6 @@ stumpd::dotcom::api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request
     // This is a cookie style logout
     this->api_logout(Webserver, Request);
   } else {
-    fprintf(stdout, "Not a known api action\n");
+    fprintf(stderr, "Not a known api action: %s\n", Request.POST("action"));
   }
 }

@@ -3,7 +3,6 @@
 void
 stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request)
 {
-  fprintf(stdout, "Yeah, page method got called!\n");
   // declare vars
   int ret;
   stumpd::authentication_session *session;
@@ -15,17 +14,16 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
 
   if(strlen(Request.URL()) == 0 || (strlen(Request.URL()) == 1 && strncmp(Request.URL(), "/", 1) == 0))
   {  
-    fprintf(stdout, "Page method index\n");
-    Request.SendFile(std::string(stumpd::dotcom::document_root).append("/index.html").c_str());
+    fprintf(stdout, "Sending index\n");
+    Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/index.html").c_str());
     return;
   } else
     if(strncmp(Request.URL(), "upload", 6) == 0)
     {
-      fprintf(stdout, "Page method upload\n");
       session = this->auth->ask(Request);
       if(session != NULL)
       {
-        Request.SendFile(std::string(stumpd::dotcom::document_root).append("/index.html").c_str());
+        Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/index.html").c_str());
         return;
       } else
       {
@@ -36,7 +34,7 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
     if(strncmp(Request.URL(), "login", 5) == 0)
     {
       // placeholder for dotcom login functionality, which just calls main stumpd auth methods
-      Request.SendFile(std::string(stumpd::dotcom::document_root).append("/index.html").c_str());
+      Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/index.html").c_str());
       return;
     } else
     if(strncmp(Request.URL(), "logout", 6) == 0)
@@ -56,7 +54,7 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
       session = this->auth->ask(Request);
       if(session != NULL)
       {
-        Request.SendFile(std::string(stumpd::dotcom::document_root).append("/index.html").c_str());
+        Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/index.html").c_str());
         return;
       } else
       {
@@ -69,7 +67,7 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
       session = this->auth->ask(Request);
       if(session != NULL)
       {
-        Request.SendFile(std::string(stumpd::dotcom::document_root).append("/index.html").c_str());
+        Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/index.html").c_str());
         return;
       } else
       {
@@ -80,19 +78,34 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
     if(strncmp(Request.URL(), "api", 3) == 0)
     {
       // placeholder for dotcom API functionality (mostly just for upload/login etc)
-      fprintf(stdout, "API was hit, full url is: %s\n", Request.URL());
       
       // We leave it up to the API to set Request.Status
       this->api(Webserver, Request);
     } else
     {
-      fprintf(stdout, "Attempting to send file: %s\n", std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str());
+      //fprintf(stdout, "Attempting to send file: %s\n", std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str());
       // Assume that it is a file, and if so, send it
-      ret = stat(std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str(), &stat_buf);
-      if(ret == 0)
+      if(Request.URL()[strlen(Request.URL()) - 1] == '?')
+      {
+        fprintf(stdout, "URL has a question mark on it\n");
+        ret = stat(std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 1)).c_str(), &stat_buf);
+      } else {
+        fprintf(stdout, "No question mark in URL\n");
+        ret = stat(std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str(), &stat_buf);
+      }
+
+      if(ret == 0 && S_ISREG(stat_buf.st_mode))
       {
         Request.GuessMimeType(Request.URL());
-        Request.SendFile(std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str());
+        if(Request.URL()[strlen(Request.URL()) - 1] == '?')
+        {
+          fprintf(stdout, "Sending file; %s\n", std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 1)).c_str());
+          Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 1)).c_str());
+        } else {
+        fprintf(stdout, "No question mark in URL\n");
+          Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str());
+        }
+
         return;
       } else {
         switch(errno)

@@ -1,4 +1,7 @@
 #include <stumpd/dotcom/dotcom.hpp>
+#include <sys/types.h>
+#include <unistd.h>
+#define gettid() syscall(__NR_gettid) 
 
 char *stumpd::dotcom::document_root;
 
@@ -17,22 +20,20 @@ stumpd::dotcom_onGet(Lacewing::Webserver &Webserver, Lacewing::Webserver::Reques
   //}
   ((stumpd::dotcom *)Webserver.CallbackPointer)->page_method(Webserver, Request);
  
-  std::cout << "Finished a get" << std::endl;
- 
   Request.Finish();
 }
 
 void
 stumpd::dotcom_onPost(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request)
 {
-  if(strcmp(Request.URL(), "/api"))
+  if(strcmp(Request.URL(), "api") == 0)
   {
-    std::vector<const char*> params;
+    //std::vector<const char*> params;
     //params = Request.RequestParams();
     //int i;
     //for(i=0;i<params.size();i++)
       //std::cout << "Found POST param: " << params[i] << std::endl;
-    std::cout << "dotcom_onPost..." << std::endl;
+    //std::cout << "dotcom_onPost..." << std::endl;
     ((stumpd::dotcom *)Webserver.CallbackPointer)->page_method(Webserver, Request);
   }
   Request.Finish();

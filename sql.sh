@@ -1,8 +1,15 @@
 #!/bin/bash
 
+YEAR=$(date +%Y);
+
+i=0;
+
+while [ $i -lt 365 ]
+do
+
 echo '
-CREATE DATABASE IF NOT EXISTS `documents_2012`;
-CREATE TABLE IF NOT EXISTS `documents_2012`.`20120709` (
+CREATE DATABASE IF NOT EXISTS `documents_'$YEAR'`;
+CREATE TABLE IF NOT EXISTS `documents_'$YEAR'`.`'$(date -d "01/01/$YEAR $i days" +%Y%m%d)'` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `date` datetime DEFAULT NULL,
   `host` varchar(64) DEFAULT NULL,
@@ -14,3 +21,6 @@ CREATE TABLE IF NOT EXISTS `documents_2012`.`20120709` (
   KEY `source_index` (`source`(40)),
   FULLTEXT KEY `content_index` (`content`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;'
+
+  ((i++))
+done

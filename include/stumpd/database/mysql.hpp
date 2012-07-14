@@ -104,7 +104,7 @@ namespace database
       return data_buf;
     } else {
       mysqlpp::Connection *db_con = this->pool.grab();
-      std::cout << "Connection db_con addr: " << &db_con << std::endl;
+      //std::cout << "Connection db_con addr: " << &db_con << std::endl;
       if(db_con->connected() == true)
       {
         mysqlpp::Query query = db_con->query(query_string);

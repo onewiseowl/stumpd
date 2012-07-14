@@ -5,8 +5,6 @@ int
 stumpd::dotcom::api_search(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request)
 {
 
-  fprintf(stdout, "API Search executed...\n");
-
   int ret;
   ret = 0;
   
@@ -21,8 +19,7 @@ stumpd::dotcom::api_search(Lacewing::Webserver &Webserver, Lacewing::Webserver::
   std::vector <std::string> hosts;
   
   std::string query_string;
-  
-  
+
   if(strlen(Request.POST("query_string")) > 0)
   {
   
@@ -45,7 +42,7 @@ stumpd::dotcom::api_search(Lacewing::Webserver &Webserver, Lacewing::Webserver::
           if(strlen(Request.POST("hosts")) > 0)
           {
             hosts = stumpd::utilities::split(Request.POST("hosts"), ',');
-            fprintf(stdout, "hosts: %s\n", hosts[0].c_str());
+            //fprintf(stdout, "hosts: %s\n", hosts[0].c_str());
           } else {
             fprintf(stderr, "No hosts\n");
           }
@@ -55,9 +52,9 @@ stumpd::dotcom::api_search(Lacewing::Webserver &Webserver, Lacewing::Webserver::
           std::string json_return =
             search.json_query(from_date, to_date, hosts, sources, query_string);
 
-          fprintf(stdout, "search.json_query returned :)\n");
+          //fprintf(stdout, "search.json_query returned :)\n");
 
-          Request.Send(json_return.c_str());          
+          Request.Write(json_return.c_str(), json_return.length());
 
           return 0;
         } else {

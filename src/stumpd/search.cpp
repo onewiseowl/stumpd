@@ -1,5 +1,6 @@
 
 #include <stumpd/search.hpp>
+#include <unistd.h>
 
 extern stumpd::database::mysql *mysql_conn;
 
@@ -18,12 +19,13 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
   if(strcmp(DB_TYPE, "mysql") == 0)
   {
 
-    fprintf(stdout, "*stumpd::database::myql_conn = %0x%x\n", mysql_conn);
-    
-    std::string mysql_query_string;
+    std::string mysql_query_string("");
 
     struct tm *from_date_buf;
+    from_date_buf = (struct tm*)calloc(sizeof(struct tm), 1);
+    
     struct tm *to_date_buf;
+    to_date_buf = (struct tm*)calloc(sizeof(struct tm), 1);
 
     char *year;
     year = (char *)calloc(sizeof(char), 20);
@@ -37,24 +39,28 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
     int date_diff;
     date_diff =  ((to_date - from_date) / 86400);
 
-    from_date_buf = localtime(&from_date);
-    to_date_buf = localtime(&to_date);
-
-
-    strftime(year, 5, "%Y", from_date_buf);
-    strftime(year_month_day, 9, "%Y%m%d", from_date_buf);
-    if(strftime(epoch_from, 11, "%s", from_date_buf) < 10)
-      fprintf(stderr, "strftime error\n");
-
-    if(strftime(epoch_to, 11, "%s", to_date_buf) < 10)
-      fprintf(stderr, "strftime error\n");
     
 
 
-    int a;
+    int loop_count;
+    loop_count = 0;
     int b;
-    for(a=0;a<date_diff;a++);
+    b = 0;
+
+    for(loop_count=0;(date_diff>0)?loop_count<date_diff:loop_count<=date_diff;loop_count++)
     {
+
+      localtime_r(&from_date, from_date_buf);
+      localtime_r(&to_date, to_date_buf);
+
+      strftime(year, 5, "%Y", from_date_buf);
+      strftime(year_month_day, 9, "%Y%m%d", from_date_buf);
+      if(strftime(epoch_from, 11, "%s", from_date_buf) < 10)
+        fprintf(stderr, "strftime error\n");
+
+      if(strftime(epoch_to, 11, "%s", to_date_buf) < 10)
+        fprintf(stderr, "strftime error\n");
+
       mysql_query_string
         .append("(SELECT * FROM ")
         .append("documents_")
@@ -138,12 +144,14 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
           .append(SEARCH_LIMIT)
           .append(")");
       }
-      mysql_query_string
-        .append(";");
+ 
+      if(date_diff > 0 && loop_count+1<date_diff)
+      mysql_query_string.append(" UNION ");
 
-      fprintf(stdout, "Query: %s\n", mysql_query_string.c_str());
-
+      from_date = from_date + 86400;
     }
+
+   //fprintf(stdout, "Query: %s\n", mysql_query_string.c_str());
 
     query_results =
       mysql_conn->query(mysql_query_string.c_str());
@@ -152,6 +160,8 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
     free(year_month_day);
     free(epoch_from);
     free(epoch_to);
+    free(from_date_buf);
+    free(to_date_buf);
     return query_results;
    } else
    if(strcmp(DB_TYPE, "clucene") == 0)
@@ -194,10 +204,10 @@ stumpd::search::json_query(time_t from_date, time_t to_date, std::vector <std::s
 
     json_string.append("])");
 
-    fprintf(stdout, "json_string: %s\n", json_string.c_str());
+    //fprintf(stdout, "json_string: %s\n", json_string.c_str());
     return json_string;
   } else {
-    fprintf(stderr, "search_return.size(): %ld\n", search_return.size());
+    //fprintf(stderr, "search_return.size(): %ld\n", search_return.size());
     return std::string("([])");
   }
 

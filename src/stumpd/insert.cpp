@@ -1,7 +1,27 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <string.h>
 
 #include <stumpd/insert.hpp>
+
+#define DB_TYPE "mysql"
+
+bool
+sort_dates( std::vector <std::string>i, std::vector<std::string> j)
+{
+
+  long i_i;
+  long i_j;
+
+  i_i = strtol(i[0].c_str(), NULL, 0);
+  i_j = strtol(j[0].c_str(), NULL, 0);
+
+  return(i_i<i_j);
+}
 
 
 size_t
@@ -9,6 +29,92 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
 {
   size_t document_count;
   document_count = 0;
+
+  bool start;
+  start = 1;
+
+  char *ymd;
+  ymd = (char*)calloc(sizeof(char), 10);
+
+  char *ymd_old;
+  ymd_old = (char*)calloc(sizeof(char), 10);
+
+  struct tm *date_buf;
+  date_buf = (struct tm*)calloc(sizeof(struct tm), 1);
+
+  if(strcmp(DB_TYPE, "mysql") == 0)
+  {
+
+  std::string insert_query;
+
+    if(data.size() > 0)
+      std::sort(data.begin(), data.end(), sort_dates);
+
+    int i;
+    time_t str_to_date;
+
+    for(i=0;i<data.size();i++)
+    {
+
+      str_to_date = strtol(data[i][0].c_str(), NULL, 0);
+
+      localtime_r(&str_to_date, date_buf);
+      strftime(ymd, 10, "%Y%m%d", date_buf);
+
+      if(strcmp(ymd, ymd_old) != 0)
+      {
+        if(strlen(ymd_old) != 0)
+        {
+          //fprintf(stdout, "ymd_old length is %ld\n", strlen(ymd_old));
+          insert_query.append(";");
+        } else {
+          if(i<data.size()-1&&start == 0)
+            insert_query.append(",");
+        }
+        //fprintf(stdout, "Starting new insert query, capping off the last one\n");
+        start = 1;
+      }
+      
+
+      if(start == 1)
+      {
+
+        strncpy(ymd_old, ymd, 10);
+
+        insert_query
+          .append("INSERT INTO documents_")
+          .append(
+            std::string(ymd)
+              .substr(0, 4))
+          .append(".")
+          .append(ymd)
+          .append("(date, host, source, content) VALUES ");
+          start = !start;
+      }
+
+        insert_query
+          .append("(FROM_UNIXTIME(")
+          .append(data[i][0])
+          .append("),\"")
+          .append(data[i][1])
+          .append("\",\"")
+          .append(data[i][2])
+          .append("\",\"")
+          .append(data[i][3])
+          .append("\")");
+        //if(i<data.size()-1&&start == 0)
+        //  insert_query.append(",");
+
+    }
+    //fprintf(stdout, "Insert query is: %s\n", insert_query.c_str());
+    free(ymd);
+    free(ymd_old);
+  } else
+  if(strcmp(DB_TYPE, "clucene") == 0)
+  {
+    fprintf(stderr, "CLucene DB_TYPE is not yet supported\n");
+    return 0;
+  }
 
 
   return document_count;
@@ -47,7 +153,13 @@ stumpd::insert::insert_json_data(std::string json_data)
     }
   }
 
-  fprintf(stdout, "Pushed back a total of %ld elements to be inserted\n", data.size());
+  //fprintf(stdout, "Pushed back a total of %ld elements to be inserted\n", data.size());
 
-  return document_count;
+  if(data.size() > 0)
+  {
+    return
+    stumpd::insert::insert_data(data);
+  } else {
+    return 0;
+  }
 }

@@ -8,6 +8,7 @@ var include = function(script_source) {
       url : script_source,
       type : 'GET',
       dataType : dt,
+      cache: false,
       success : function(data, textStatus, jqXHR) {
         $('head').append(
           $('<link></link>').attr({
@@ -25,6 +26,7 @@ var include = function(script_source) {
       url : script_source,
       type : 'GET',
       dataType : dt,
+      cache: false,
       success : function(data, textStatus, jqXHR) {
         eval(data);
       }

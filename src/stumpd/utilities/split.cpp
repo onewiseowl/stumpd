@@ -13,7 +13,6 @@ std::vector < std::string > stumpd::utilities::split(const char *str, char c = '
 	    str++;
 
 	result.push_back(std::string(begin, str));
-	fprintf(stdout, "Pushed back: %s\n", std::string(begin, str).c_str());
 
 	if (0 == *str++)
         {
