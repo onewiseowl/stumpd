@@ -1,0 +1,28 @@
+@font-face
+{
+font-family: sansation;
+src: url("/Sansation_Light.ttf"),
+     url("/Sansation_Light.eot"); /* IE9+ */
+}
+
+body
+{
+ font-family: "sansation";
+ font-size:16px;
+ color:#777777;
+ background:#222222;
+ margin: 0;
+ padding 0;
+ border: 0;
+}
+
+/*
+div._logoBox
+{
+ position : relative;
+ float : left;
+ width : auto;
+ border : none;
+ font-size : 175px;
+}
+*/

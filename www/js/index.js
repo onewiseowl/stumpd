@@ -23,7 +23,7 @@ $.extend(widgets, {
           },
           statusCode : {
             200 : function () {
-              $(location).attr({href : '/home'});
+              $(location).attr({href : '/search'});
             },
             401 : function () {
               alert('Aw shit, login failed :(');
@@ -86,7 +86,7 @@ $.extend(widgets, {
                 id   : '_loginBox_submit',
                 name : '_loginBox_submit',
                 class : '_loginBox_submit'
-              }).html('Submit'),
+              }).html('Login'),
               $('<br />')
             )
           ).fadeIn(1200)

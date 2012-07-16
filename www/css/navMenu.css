@@ -1,0 +1,81 @@
+
+div._navMenu {
+ background: #383838;
+ height: 200px;
+ margin: 0;
+ overflow: hidden;
+ padding: 0;
+ position: relative;
+ width: 100%;
+}
+
+table._navMenu_table {
+ width: 300px;
+ min-width: 300px;
+ font-size: 30px;
+ padding: 150px 0px 0px 0px;
+}
+
+td {
+ text-align: center;
+ min-width: 100px;
+ max-width: 100px;
+}
+
+a._navMenu_search:link {
+ text-decoration: none;
+ color: #ffffff;
+}
+
+a._navMenu_search:visited {
+ text-decoration: none;
+ color: #ffffff;
+}
+
+a._navMenu_search:hover {
+ font-size: 28px;
+}
+
+a._navMenu_tools:link {
+ text-decoration: none;
+ color: #ffffff;
+}
+
+a._navMenu_tools:visited {
+ text-decoration: none;
+ color: #ffffff;
+}
+
+a._navMenu_tools:hover {
+ font-size: 28px;
+}
+
+
+a._navMenu_logout:link {
+ text-decoration: none;
+ color: #ffffff;
+}
+
+a._navMenu_logout:visited {
+ text-decoration: none;
+ color: #ffffff;
+}
+
+a._navMenu_logout:hover {
+ font-size: 28px;
+}
+
+div._logoBox {
+ position: relative;
+ float: left;
+ width: auto;
+ border: none;
+ font-size: 175px;
+}
+
+
+/*
+div._navTabs {
+ 
+}
+*/

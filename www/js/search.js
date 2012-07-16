@@ -12,7 +12,7 @@ $.extend(widgets, {
           },
           success : function(data, textStatus, jqXHR) {
             this.sources = (data);
-            alert(data);
+            //alert(data);
           }
         });
       },
@@ -21,7 +21,8 @@ $.extend(widgets, {
       }
     }),
     draw : function() {
-      include('/js/navMenu.js');
+      include('/css/navMenu.css');
+      //include('/js/navMenu.js');
       widgets.navMenu.draw();
       widgets.search.menu.draw();
     }
