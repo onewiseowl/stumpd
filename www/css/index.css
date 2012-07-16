@@ -23,6 +23,10 @@ body {
  line-height: 1;
 }
 
+input {
+ outline: none;
+ border: 0px;
+}
 div._loginBox {
  position: relative;
  float: left;

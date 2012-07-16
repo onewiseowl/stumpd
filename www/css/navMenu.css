@@ -1,11 +1,12 @@
 
 div._navMenu {
- background: #383838;
- height: 200px;
+ /*background: #383838;
+ height: 175px;
+ max-height: 175px;
+ */
  margin: 0;
- overflow: hidden;
  padding: 0;
- position: relative;
+ /*position: relative;*/
  width: 100%;
 }
 
@@ -13,7 +14,9 @@ table._navMenu_table {
  width: 300px;
  min-width: 300px;
  font-size: 30px;
- padding: 150px 0px 0px 0px;
+ padding: 135px 0px 0px 0px;
+ float: left;
+ display: none;
 }
 
 td {
@@ -64,6 +67,19 @@ a._navMenu_logout:visited {
 a._navMenu_logout:hover {
  font-size: 28px;
 }
+
+/*
+div._logoBox {
+ position: relative;
+ float: left;
+ width: auto;
+ height: auto;
+ border: none;
+ height: 175px;
+ max-height: 175px;
+ font-size: 175px;
+}
+*/
 
 div._logoBox {
  position: relative;

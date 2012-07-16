@@ -2,11 +2,11 @@ $.extend(widgets, {
   navMenu : ({
     draw : function() {
       $('body').append(
-        $('<div></div>').attr({
-          id : '_navMenu',
-          name : '_navMenu',
-          class : '_navMenu'
-        }).append(
+//        $('<div></div>').attr({
+  //        id : '_navMenu',
+    //      name : '_navMenu',
+      //    class : '_navMenu'
+        //}).append(
           $('<div></div>').attr({
             id : '_logoBox',
             name : '_logoBox',
@@ -23,7 +23,7 @@ $.extend(widgets, {
                   id: '_navMenu_search',
                   name: '_navMenu_search',
                   class: '_navMenu_search',
-                  href: 'Javascript: alert("search")'
+                  href: '/search'
                 }).html('search')
               ),
               $('<td></td>').append(
@@ -31,7 +31,7 @@ $.extend(widgets, {
                   id: '_navMenu_tools',
                   name: '_navMenu_tools',
                   class: '_navMenu_tools',
-                  href: 'Javascript: alert("tools")'
+                  href: '/tools'
                 }).html('tools')
               ),
               $('<td></td>').append(
@@ -39,12 +39,12 @@ $.extend(widgets, {
                   id: '_navMenu_logout',
                   name: '_navMenu_logout',
                   class: '_navMenu_logout',
-                  href: 'Javascript: alert("logout")'
+                  href: '/logout'
                 }).html('logout')
               )
             )
-          )
-        )
+          ).fadeIn(1500)
+        //)
       )
     }
   })
