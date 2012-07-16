@@ -2,11 +2,6 @@ $.extend(widgets, {
   navMenu : ({
     draw : function() {
       $('body').append(
-//        $('<div></div>').attr({
-  //        id : '_navMenu',
-    //      name : '_navMenu',
-      //    class : '_navMenu'
-        //}).append(
           $('<div></div>').attr({
             id : '_logoBox',
             name : '_logoBox',
@@ -44,7 +39,6 @@ $.extend(widgets, {
               )
             )
           ).fadeIn(1500)
-        //)
       )
     }
   })

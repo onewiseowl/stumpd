@@ -98,6 +98,8 @@ var widgets = ({
         widgets.home.draw();
         break;
         case '/search':
+        include('/css/navMenu.css');
+        include('/js/navMenu.js');
         include('/css/search.css');
         include('/js/search.js');
         widgets.search.draw();

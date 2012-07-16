@@ -13,7 +13,7 @@ html {
 
 body {
  font-family: "sansation";
- font-size: 16px;
+ font-size: 18px;
  color: #777777;
  background: #222222;
  margin: 0;
@@ -48,7 +48,7 @@ a._loginBox_submit:visited {
 }
 
 a._loginBox_submit:hover {
- font-size: 18px;
+ font-size: 16px;
 }
 
 input._loginBox_username_input {

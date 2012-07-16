@@ -18,10 +18,18 @@ $.extend(widgets, {
       },
       draw : function() {
         widgets.search.menu.getSources();
+        $('body').append(
+          $('<br />'),
+          $('<input></input>').attr({
+            id : '_queryInput',
+            name : '_queryInput',
+            class : '_queryInput'
+          })
+        );
       }
     }),
     draw : function() {
-      include('/css/navMenu.css');
+      //include('/css/navMenu.css');
       //include('/js/navMenu.js');
       widgets.navMenu.draw();
       widgets.search.menu.draw();
