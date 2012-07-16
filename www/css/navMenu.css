@@ -11,8 +11,8 @@ div._navMenu {
 }
 
 table._navMenu_table {
- width: 300px;
- min-width: 300px;
+ max-width: 350px;
+ min-width: 350px;
  font-size: 30px;
  padding: 135px 0px 0px 0px;
  float: left;
@@ -65,6 +65,20 @@ a._navMenu_logout:visited {
 }
 
 a._navMenu_logout:hover {
+ font-size: 28px;
+}
+
+a._navMenu_admin:link {
+ text-decoration: none;
+ color: #CC0000;
+}
+
+a._navMenu_admin:visited {
+ text-decoration: none;
+ color: #CC0000;
+}
+
+a._navMenu_admin:hover {
  font-size: 28px;
 }
 

@@ -5,6 +5,14 @@ src: url("/Sansation_Light.ttf"),
      url("/Sansation_Light.eot"); /* IE9+ */
 }
 
+@font-face
+{
+font-family: sansation;
+font-weight: bold;
+src: url("/Sansation_Bold.ttf"),
+     url("/Sansation_Bold.eot"); /* IE9+ */
+}
+
 html {
  margin: 0;
  padding: 0;

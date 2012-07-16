@@ -31,6 +31,14 @@ $.extend(widgets, {
               ),
               $('<td></td>').append(
                 $('<a></a>').attr({
+                  id: '_navMenu_admin',
+                  name: '_navMenu_admin',
+                  class: '_navMenu_admin',
+                  href: '/admin'
+                }).html('admin')
+              ),
+              $('<td></td>').append(
+                $('<a></a>').attr({
                   id: '_navMenu_logout',
                   name: '_navMenu_logout',
                   class: '_navMenu_logout',

@@ -4,6 +4,14 @@ src: url("/Sansation_Light.ttf"),
      url("/Sansation_Light.eot"); /* IE9+ */
 }
 
+@font-face
+{
+font-family: sansation;
+font-weight: bold;
+src: url("/Sansation_Bold.ttf"),
+     url("/Sansation_Bold.eot"); /* IE9+ */
+}
+
 body {
  font-family: "sansation";
  font-size: 16px;
@@ -17,6 +25,8 @@ body {
 }
 
 input._queryInput {
+ font-family: "sansation";
+ font-weight: bold;
  width: 95%;
  font-size: 16px;
  background: #777777;
