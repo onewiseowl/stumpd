@@ -1,20 +1,63 @@
+@font-face
+{
+font-family: sansation;
+src: url("/Sansation_Light.ttf"),
+     url("/Sansation_Light.eot"); /* IE9+ */
+}
+
 body
 {
- /*background-image:url('/images/lighthouse-s.jpg');
+ /*background-image:url('/images/index_bg.jpg');
  background-size: 100%
- background-repeat:no-repeat;
- */
- background: #46483E
+ background-repeat:no-repeat;*/
+ 
+ /*background: #46483E;
  font-size: 12px;
  line-height: 180%;
- font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif;
+ font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif;*/
+ font-family: "sansation";
+ font-size:16px; color:#777; background:#222;
 }
 
 div._loginBox
 {
- float : right;
+ position : relative;
+ float : left;
  width : auto;
- background : #ffffff;
- border : solid;
+ height : auto;
+ border : none;
+ display : hidden;
+ margin-top : 63px;
+}
+
+a._loginBox_submit:link {
+ text-decoration : none;
+ color : #ffffff;
+}
+
+a._loginBox_submit:visited {
+ text-decoration : none;
+ color : #ffffff;
+}
+
+a._loginBox_submit:hover {
+ font-size:18px;
+}
+
+input._loginBox_username_input {
+  float : right;
+}
+
+input._loginBox_password_input {
+  float : right;
+}
+
+div._logoBox
+{
+ position : relative;
+ float : left;
+ width : auto;
+ border : none;
+ font-size : 175px;
 }
 

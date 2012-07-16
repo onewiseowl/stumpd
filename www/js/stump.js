@@ -1,3 +1,11 @@
+function sleep(millis)
+ {
+  var date = new Date();
+  var curDate = null;
+  do { curDate = new Date(); }
+  while(curDate-date < millis);
+}
+
 var include = function(script_source) {
 
   if(script_source.split('.').pop() == 'css')
@@ -28,15 +36,47 @@ var include = function(script_source) {
       dataType : dt,
       cache: false,
       success : function(data, textStatus, jqXHR) {
-        eval(data);
+        try {
+          eval(data);
+        } catch (e) {
+          if (e instanceof SyntaxError) {
+            alert(e.message);
+          }
+        }
       }
-  })
+    })
   }
 
 
 }
 
+var isFontFaceSupported = function(){
+
+  var ua = navigator.userAgent, parsed;
+
+  if (/*@cc_on@if(@_jscript_version>=5)!@end@*/0) 
+      return true;
+  if (parsed = ua.match(/Chrome\/(\d+\.\d+\.\d+\.\d+)/))
+      return parsed[1] >= '4.0.249.4';
+  if ((parsed = ua.match(/Safari\/(\d+\.\d+)/)) && !/iPhone/.test(ua))
+      return parsed[1] >= '525.13';
+  if (/Opera/.test({}.toString.call(window.opera)))
+      return opera.version() >= '10.00';
+  if (parsed = ua.match(/rv:(\d+\.\d+\.\d+)[^b].*Gecko\//))
+      return parsed[1] >= '1.9.1';    
+              
+  return false;
+
+}
+
+if(!isFontFaceSupported)
+{
+  alert('@font-face is not supported by your browser, please upgrade');
+}
+
+
 var widgets = ({
+// First, we do a feature test
   loadWidgets : function() {
     switch(window.location.pathname) {
       case '/':
@@ -44,6 +84,7 @@ var widgets = ({
       case '/login':
         include('/css/index.css');
         include('/js/index.js');
+        widgets.index.logoBox.draw();
         widgets.index.loginBox.draw();
         break;
       case '/upload':
@@ -56,7 +97,7 @@ var widgets = ({
         include('/js/home.js');
         widgets.home.draw();
         break;
-      case '/search':
+        case '/search':
         include('/css/search.css');
         include('/js/search.js');
         widgets.search.draw();
