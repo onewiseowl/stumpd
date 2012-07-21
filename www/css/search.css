@@ -1,15 +1,15 @@
 @font-face {
 font-family: sansation;
-src: url("/Sansation_Light.ttf"),
-     url("/Sansation_Light.eot"); /* IE9+ */
+src: url("/fonts/Sansation_Light.ttf"),
+     url("/fonts/Sansation_Light.eot"); /* IE9+ */
 }
 
 @font-face
 {
 font-family: sansation;
 font-weight: bold;
-src: url("/Sansation_Bold.ttf"),
-     url("/Sansation_Bold.eot"); /* IE9+ */
+src: url("/fonts/Sansation_Bold.ttf"),
+     url("/fonts/Sansation_Bold.eot"); /* IE9+ */
 }
 
 body {
