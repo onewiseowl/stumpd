@@ -15,8 +15,15 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
   if(strlen(Request.URL()) == 0 || (strlen(Request.URL()) == 1 && strncmp(Request.URL(), "/", 1) == 0))
   {  
     fprintf(stdout, "Sending index\n");
-    Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/index.html").c_str());
-    return;
+    if(this->auth->ask(Request) != NULL)
+    {
+      Request.Header("Location", "/search"); 
+      Request.Status(302, "Object moved");
+      return;
+    } else {
+      Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/index.html").c_str());
+      return;
+    }
   } else
     if(strncmp(Request.URL(), "upload", 6) == 0)
     {

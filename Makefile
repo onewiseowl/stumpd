@@ -16,12 +16,12 @@ all: jsonpp stumpd
 
 jsonpp:
 
-	cd src/jsonpp ; $(MAKE)
+	$(MAKE) -C src/jsonpp
 
 
 stumpd:
 
-	cd src/stumpd ; $(MAKE)
+	$(MAKE) -C src/stumpd
 
 
 %.o: %.cpp
@@ -32,6 +32,6 @@ stumpd:
 
 clean :
 
+	$(MAKE) -C src/jsonpp/ clean
+	$(MAKE) -C src/stumpd/ clean
 	rm -f stumpd
-	pushd src/jsonpp ; make clean ; popd
-	pushd src/stumpd ; make clean ;	popd

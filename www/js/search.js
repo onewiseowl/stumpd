@@ -106,16 +106,53 @@ $.extend(widgets, {
           source: function( request, response ) {
             // determine if cursor is between two quotes
             if(request.term.substring(request.term.length - 3,request.term.length) == '", ')
-            {              
-              var terms = request.term.split(/"/);
-              if(terms[terms.length - 2].match(/,/) == ',')
+            {
+              // get searchable current command type
+              var delim;
+
+              var startPos,endPos;
+
+              var position = $('input#_queryInput')[0].selectionStart;
+              while(delim != ':' && position > 0)
               {
-                var sub_terms = terms[terms.length - 2].split(/,/);
+                delim = $('input#_queryInput')[0].value.substring(--position, position+1) ;
+              }
+              //alert("Found delimiter " + delim + " at position: " + position + " and search term is " + ui.item.value);
+              endPos = position;
+
+              while(delim != ' ' && position > 0)
+              {
+                delim = $('input#_queryInput')[0].value.substring(--position, position+1) ;
+              }
+              startPos = position;
+              var currentCommand = $('input#_queryInput')[0].value.substring(startPos, endPos).trim();
+
+              //console.log("currentCommand: " + currentCommand);
+
+              var terms = request.term.split(/"/);
+              function term_position(term_buf) {
+                var total_size = 0;
+                var i;
+                for(i=0;i<term_buf.length;i++)
+                {
+                  total_size += term_buf[i].length;
+                  if($('input#_queryInput')[0].selectionStart <= total_size)
+                  {
+                    return --i;
+                  } 
+                }
+                return i-2;
+              }
+
+              if(terms[term_position(terms)].match(/,/) != null)
+              {
+                var sub_terms = terms[term_position(terms)].split(/,/);
+                
                 response( $.ui.autocomplete.filter(
-                  widgets.search.searchables[widgets.search.lastCommand], sub_terms.pop() ) );
+                  widgets.search.searchables[currentCommand], sub_terms.pop() ) );
               } else {
                 response( $.ui.autocomplete.filter(
-                  widgets.search.searchables[widgets.search.lastCommand], terms[terms.length - 2] ) );
+                  widgets.search.searchables[currentCommand], terms[term_position(terms)] ) );
               }
             } else {
             response( $.ui.autocomplete.filter(
@@ -149,8 +186,6 @@ $.extend(widgets, {
 
             } else {
               var terms = split( this.value );
-              widgets.search.lastCommand = ui.item.label;
-              console.log("widgets.search.lastCommand: " + widgets.search.lastCommand);
               terms.pop();
               terms.push( ui.item.value + '""' );
               terms.push( '' );
