@@ -12,6 +12,72 @@ var oe = 0;
 
 $.extend(widgets, {
   search : ({
+    table : ({
+      draw : function(search_results) {
+        if($('div#_searchContainer').length > 0)
+        {
+          console.log("div#_searchContainer exists, destroying");
+          $('div#_searchContainer').fadeOut(1000);
+          $('div#_searchContainer').empty().remove();
+          
+        }
+        $('body').append(
+          $('<div></div>').attr({
+            id : '_searchContainer',
+            name : '_searchContainer',
+            class : '_searchContainer'
+          }).append(
+            $('<table></table>').attr({
+              id : '_searchResults',
+              name : '_searchResults',
+              class : '_searchResults'
+            })
+          )
+        );
+        //<tr class="SR" BGCOLOR="#eeeeee"><th  class="SRD">date</th><th class="SRD">host</th><th class="SRD">inputFile</th><th  class="SRD" >content</th></tr>
+        $('table#_searchResults').append(
+          $('<tr></tr>').attr({
+            class: "SR"
+          }).append(
+            $('<th></th>').attr({
+              class : 'SRD'
+            }).text('date'),
+            $('<th></th>').attr({
+              class : 'SRD'
+            }).text('host'),
+            $('<th></th>').attr({
+              class : 'SRD'
+            }).text('input'),
+            $('<th></th>').attr({
+              class : 'SRD'
+            }).text('content')
+          )
+        );
+        for(i in search_results)
+        {
+          $('table#_searchResults').append(
+            $('<tr></tr>').append(
+              $('<td></td>').attr({
+                class : "sortable"
+              }).text(search_results[i]['date']),
+              $('<td></td>').attr({
+                class : "sortable"
+              }).text(search_results[i]['host']),
+              $('<td></td>').attr({
+                class : "sortable"
+              }).text(search_results[i]['input']),
+              $('<td></td>').attr({
+                class : "sortable"
+              }).text(search_results[i]['content'])
+            )
+          );
+          console.log("search_results: ");
+          console.log(search_results[i]['date']); 
+        }
+        $('div#_searchContainer').fadeIn(2000);
+        
+      }
+    }),
     lastCommand : "",
     searchCommands : [
       {
@@ -24,8 +90,7 @@ $.extend(widgets, {
       },
       {
         label : 'hosts',
-        value : 'hosts:',
-        data : [{label:'myvpv01.corp.verifi.com',value:'myvpv01.corp.verifi.com'},{label:'cdrn3dbsv01.corp.verifi.com',value:'cdrn3dbsv01.corp.verifi.com'}]
+        value : 'hosts:'
       },
       {
         label : 'inputs',
@@ -51,40 +116,100 @@ $.extend(widgets, {
           value : 'cdrn3dbsv01.corp.verifi.com'
         }
       ],
-      "inputs" : [
+      "inputs" : []
+    },
+    parseQueryAndSubmit : function() {
+      var jquery_data = "action=search&";
+      var split_queryInput = $("input#_queryInput")[0].value.split(/", /);
+      var i = 0;
+      for (i=0;i<split_queryInput.length-1;i++)
+      {
+        jquery_data += split_queryInput[i].split(/:/)[0];
+        jquery_data += '=';
+        if(split_queryInput[i].split(/:/)[0] == "dateFrom" || split_queryInput[i].split(/:/)[0] == "dateTo")
         {
-          label : "/var/log/hosts/cdrn3dbsv01/cdrn_1.log",
-          value : "/var/log/hosts/cdrn3dbsv01/cdrn_1.log"
-        },
-        {
-          label : "/var/log/hosts/cdrn3dbsv02/auth.log",
-          value : "/var/log/hosts/cdrn3dbsv02/auth.log"
+          var dateData = '';
+          try
+          {
+            jquery_data += new String(Date.parse(split_queryInput[i].split(/:/)[1].substring(1, split_queryInput[i].split(/:/)[1].length)).valueOf()).substring(0,10);
+          } catch(e) {
+            alert("Error: could not parse " + split_queryInput[i].split(/:/)[0] + "\nbad formatting: " + e + "\n" + split_queryInput[i].split(/:/)[1].substring(1, split_queryInput[i].split(/:/)[1].length));
+            return 1;
+          }
+        } else {
+          jquery_data += split_queryInput[i].split(/:/)[1].substring(1, split_queryInput[i].split(/:/)[1].length);
         }
-      ]
+        jquery_data += '&';  
+      }
+      jquery_data = jquery_data.substring(0, jquery_data.length - 1);
+      $.ajax({
+          url : "/api",
+          type : "POST",
+          async : true,
+          data : jquery_data,
+          success : function(data, textStatus, jqXHR) {
+            var json_data = eval(data);
+            widgets.search.table.draw(json_data);
+            delete json_data;
+          }
+        });
     },
     menu : ({
       sources : [{}],
-      getSources : function() {
+      getInputs : function() {
         $.ajax({
           url : "/api",
-          type : "GET",
+          type : "POST",
+          async : true,
           data : {
-            action : "getSources"
+            action : "getInputs"
           },
           success : function(data, textStatus, jqXHR) {
-            this.sources = (data);
+            var json_data = eval(data);
+            for(i in json_data.inputs)
+            {
+              widgets.search.searchables.inputs.push({label : json_data.inputs[i], value : json_data.inputs[i]});
+            }
+            delete json_data;
+          }
+        });
+      },
+      getHosts : function() {
+        $.ajax({
+          url : "/api",
+          type : "POST",
+          async : true,
+          data : {
+            action : "getHosts"
+          },
+          success : function(data, textStatus, jqXHR) {
+            var json_data = eval(data);
+            for(i in json_data.hosts)
+            {
+              widgets.search.searchables.hosts.push({label : json_data.hosts[i], value : json_data.hosts[i]});
+            }
+            delete json_data;
           }
         });
       },
       draw : function() {
-        widgets.search.menu.getSources();
+        widgets.search.menu.getInputs();
+        widgets.search.menu.getHosts();
         $('body').append(
           $('<br />'),
           $('<input></input>').attr({
             id : '_queryInput',
             name : '_queryInput',
             class : '_queryInput'
-          })
+          }),
+          $('<br />'),
+          $('<br />'),
+          $('<a></a>').attr({
+            id : '_queryInput_submit',
+            name : '_queryInput_submit',
+            class : '_queryInput_submit',
+            href : 'Javascript: widgets.search.parseQueryAndSubmit();'
+          }).text("Submit")
         );
       },
       getAutoComplete : function(obj, str)

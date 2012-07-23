@@ -18,10 +18,22 @@ namespace stumpd {
     public:
 
       std::vector <std::vector <std::string> >
-      query(time_t from_date, time_t to_date, std::vector <std::string> hosts, std::vector <std::string> sources, std::string query_string);
+      query(time_t from_date, time_t to_date, std::vector <std::string> hosts, std::vector <std::string> inputs, std::string query_string);
 
       std::string
-      json_query(time_t from_date, time_t to_date, std::vector <std::string> hosts, std::vector <std::string> sources, std::string query_string);
+      json_query(time_t from_date, time_t to_date, std::vector <std::string> hosts, std::vector <std::string> inputs, std::string query_string);
+
+      std::vector <std::vector <std::string> >
+      getInputs();
+
+      std::string
+      json_getInputs();
+
+      std::vector <std::vector <std::string> >
+      getHosts();
+
+      std::string
+      json_getHosts();
   };
 
 }

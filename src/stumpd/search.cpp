@@ -5,7 +5,7 @@
 extern stumpd::database::mysql *mysql_conn;
 
 std::vector <std::vector <std::string> >
-stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string> hosts, std::vector <std::string> sources, std::string query_string)
+stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string> hosts, std::vector <std::string> inputs, std::string query_string)
 {
 
   #define DB_TYPE "mysql"
@@ -38,9 +38,7 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
 
     int date_diff;
     date_diff =  ((to_date - from_date) / 86400);
-
-    
-
+    fprintf(stdout, "%ld days different %ld %ld\n", date_diff, to_date, from_date);
 
     int loop_count;
     loop_count = 0;
@@ -53,13 +51,13 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
       localtime_r(&from_date, from_date_buf);
       localtime_r(&to_date, to_date_buf);
 
-      strftime(year, 5, "%Y", from_date_buf);
-      strftime(year_month_day, 9, "%Y%m%d", from_date_buf);
-      if(strftime(epoch_from, 11, "%s", from_date_buf) < 10)
-        fprintf(stderr, "strftime error\n");
+      strftime(year, 20, "%Y", from_date_buf);
+      strftime(year_month_day, 20, "%Y%m%d", from_date_buf);
+      if(strftime(epoch_from, 20, "%s", from_date_buf) < 10)
+        fprintf(stderr, "strftime error: %s\n", epoch_from);
 
-      if(strftime(epoch_to, 11, "%s", to_date_buf) < 10)
-        fprintf(stderr, "strftime error\n");
+      if(strftime(epoch_to, 20, "%s", to_date_buf) < 10)
+        fprintf(stderr, "strftime error: %s \n", epoch_to);
 
       mysql_query_string
         .append("(SELECT * FROM ")
@@ -68,20 +66,20 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
         .append(".")
         .append(year_month_day);
 
-      if(sources.size() > 0)
+      if(inputs.size() > 0)
       {
-        for(b=0;b<sources.size();b++)
+        for(b=0;b<inputs.size();b++)
         {
           if(b == 0)
           {
             mysql_query_string
-              .append(" WHERE source in (\"")
-              .append(sources[b])
+              .append(" WHERE input in (\"")
+              .append(inputs[b])
               .append("\"");   
           } else {
             mysql_query_string
               .append(",\"")
-              .append(sources[b])
+              .append(inputs[b])
               .append("\"");
           }
           mysql_query_string
@@ -89,7 +87,7 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
         }
       }
 
-      if(sources.size() > 0)
+      if(inputs.size() > 0)
       {
         mysql_query_string
           .append(" AND ");
@@ -119,13 +117,16 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
           .append(") ");
       }
 
-      if(hosts.size() == 0 && sources.size() == 0)
+      if(hosts.size() == 0 && inputs.size() == 0)
       {
         mysql_query_string
           .append(" WHERE ");
       } else {
-        mysql_query_string
-          .append(" AND ");
+        if(hosts.size() > 0)
+        {
+          mysql_query_string
+            .append(" AND ");
+        }
       }
 
       mysql_query_string
@@ -144,14 +145,17 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
           .append(SEARCH_LIMIT)
           .append(")");
       }
- 
+
+      mysql_query_string
+        .append(")"); 
+
       if(date_diff > 0 && loop_count+1<date_diff)
-      mysql_query_string.append(" UNION ");
+        mysql_query_string.append(" UNION ");
 
       from_date = from_date + 86400;
     }
 
-   //fprintf(stdout, "Query: %s\n", mysql_query_string.c_str());
+   fprintf(stdout, "Query: %s\n", mysql_query_string.c_str());
 
     query_results =
       mysql_conn->query(mysql_query_string.c_str());
@@ -172,19 +176,21 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
 }
 
 std::string
-stumpd::search::json_query(time_t from_date, time_t to_date, std::vector <std::string> hosts, std::vector <std::string> sources, std::string query_string)
+stumpd::search::json_query(time_t from_date, time_t to_date, std::vector <std::string> hosts, std::vector <std::string> inputs, std::string query_string)
 {
   std::vector <std::vector <std::string> > search_return;
   std::string json_string("([");
   size_t a;
   size_t b;
 
-  search_return = this->query(from_date, to_date, hosts, sources, query_string);
+  fprintf(stdout, "from_date: %ld\nto_date: %ld \n\n", from_date, to_date);
+
+  search_return = this->query(from_date, to_date, hosts, inputs, query_string);
 
   if(search_return.size() > 0)
   {
     // table rows are as follows
-    // id | date | host | source | data
+    // id | date | host | input | data
     for(a=0;a<search_return.size();a++)
     {
       json_string
@@ -192,7 +198,7 @@ stumpd::search::json_query(time_t from_date, time_t to_date, std::vector <std::s
         .append(search_return[a][1])
         .append("\",host:\"")
         .append(search_return[a][2])
-        .append("\",source:\"")
+        .append("\",input:\"")
         .append(search_return[a][3])
         .append("\",content:\"")
         .append(search_return[a][4])
@@ -211,4 +217,93 @@ stumpd::search::json_query(time_t from_date, time_t to_date, std::vector <std::s
     return std::string("([])");
   }
 
+}
+
+
+std::vector <std::vector <std::string> >
+stumpd::search::getInputs()
+{
+
+  #define DB_TYPE "mysql"
+  #define DB_NAME "stump"
+  #define SEARCH_LIMIT "1000"
+
+  std::vector <std::vector <std::string> > query_results;
+
+  if(strcmp(DB_TYPE, "mysql") == 0)
+  {
+    query_results =
+      mysql_conn->query("SELECT * from stump.inputs");    
+    return query_results;
+  } else {
+    return query_results;
+  }
+}
+
+std::string
+stumpd::search::json_getInputs()
+{
+
+  size_t a;
+
+  std::vector <std::vector <std::string> > search_return;
+  search_return = this->getInputs();
+
+  std::string json_string("({\"inputs\":[");
+
+  for(a=0;a<search_return.size();a++)
+  {
+    json_string
+      .append("\"")
+      .append(search_return[a][1])
+      .append("\"");
+    if(a < search_return.size() - 1 && search_return.size() > 1)
+        json_string.append(",");
+  }
+  json_string.append("]})");
+  return json_string;
+}
+
+std::vector <std::vector <std::string> >
+stumpd::search::getHosts()
+{
+
+  #define DB_TYPE "mysql"
+  #define DB_NAME "stump"
+  #define SEARCH_LIMIT "1000"
+
+  std::vector <std::vector <std::string> > query_results;
+
+  if(strcmp(DB_TYPE, "mysql") == 0)
+  {
+    query_results =
+      mysql_conn->query("SELECT * from stump.hosts");    
+    return query_results;
+  } else {
+    return query_results;
+  }
+}
+
+std::string
+stumpd::search::json_getHosts()
+{
+
+  size_t a;
+
+  std::vector <std::vector <std::string> > search_return;
+  search_return = this->getHosts();
+
+  std::string json_string("({\"hosts\":[");
+
+  for(a=0;a<search_return.size();a++)
+  {
+    json_string
+      .append("\"")
+      .append(search_return[a][1])
+      .append("\"");
+    if(a < search_return.size() - 1 && search_return.size() > 1)
+        json_string.append(",");
+  }
+  json_string.append("]})");
+  return json_string;
 }

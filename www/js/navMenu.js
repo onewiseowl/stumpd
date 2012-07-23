@@ -46,7 +46,7 @@ $.extend(widgets, {
                 }).html('logout')
               )
             )
-          ).fadeIn(1500)
+          ).fadeIn(5000)
       )
     }
   })

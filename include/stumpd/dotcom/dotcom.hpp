@@ -69,7 +69,13 @@ namespace stumpd {
 
       int
       api_insert_data(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
-      
+
+      int
+      api_getInputs(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
+
+      int
+      api_getHosts(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
+
       void
       api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
       
