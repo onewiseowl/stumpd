@@ -143,16 +143,16 @@ $.extend(widgets, {
       }
       jquery_data = jquery_data.substring(0, jquery_data.length - 1);
       $.ajax({
-          url : "/api",
-          type : "POST",
-          async : true,
-          data : jquery_data,
-          success : function(data, textStatus, jqXHR) {
-            var json_data = eval(data);
-            widgets.search.table.draw(json_data);
-            delete json_data;
-          }
-        });
+        url : "/api",
+        type : "POST",
+        async : true,
+        data : jquery_data,
+        success : function(data, textStatus, jqXHR) {
+          var json_data = eval(data);
+          widgets.search.table.draw(json_data);
+          delete json_data;
+        }
+      });
     },
     menu : ({
       sources : [{}],

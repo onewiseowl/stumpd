@@ -25,6 +25,19 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
       return;
     }
   } else
+    if(strncmp(Request.URL(), "tools", 5) == 0)
+    {
+      session = this->auth->ask(Request);
+      if(session != NULL)
+      {
+        Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/index.html").c_str());
+        return;
+      } else
+      {
+        Request.Header("Location", "/login");
+        Request.Status(401, "Object moved");
+      }
+  } else
     if(strncmp(Request.URL(), "upload", 6) == 0)
     {
       session = this->auth->ask(Request);

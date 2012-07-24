@@ -2,7 +2,7 @@ SHELL = /bin/bash
 
 CC = g++
 
-CFLAGS = -g -O0 -Wall -I/usr/include/mysql -I/usr/include/mysql++ -Iinclude -llacewing -lmysqlclient -lmysqlpp -DLWSYNC_HAS_NO_BOOST
+CFLAGS = -g -O0 -Wall -I/usr/include/mysql -I/usr/include/mysql++ -Iinclude -lv8 -llacewing -lmysqlclient -lmysqlpp -DLWSYNC_HAS_NO_BOOST
 
 COMPILE = $(CC) $(CFLAGS) -c
 

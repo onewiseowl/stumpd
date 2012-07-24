@@ -103,6 +103,13 @@ var widgets = ({
         include('/css/search.css');
         include('/js/search.js');
         widgets.search.draw();
+        break;
+        case '/tools':
+        include('/css/navMenu.css');
+        include('/js/navMenu.js');
+        include('/css/tools.css');
+        include('/js/tools.js');
+        widgets.tools.draw();
     }
   }
 });

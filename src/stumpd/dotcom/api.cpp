@@ -7,6 +7,12 @@ stumpd::dotcom::api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request
   //fprintf(stdout, "Executing API function...\n");
 
   // This is just a test response
+  if(strcmp(Request.POST("action"), "getFilters") == 0)
+  {
+    Request.Write("[{\"test filter\":\".*cdrn.*\"}]");
+    //this->api_getFilters(Webserver, Request);
+    return;
+  } else
   if(strcmp(Request.POST("action"), "getInputs") == 0)
   {
     //Request.Write("[{\"/var/www/verifi/logs/stuff/stuff.log\", \"/var/log/auth.log\"}]");
@@ -38,5 +44,6 @@ stumpd::dotcom::api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request
     this->api_logout(Webserver, Request);
   } else {
     fprintf(stderr, "Not a known api action: %s\n", Request.POST("action"));
+    Request.Status(404, "Not Found");
   }
 }

@@ -56,12 +56,12 @@ namespace lwsync
       /** Fake constructor.
         * @note has no implementation.
         */
-      resource_sync_policy();
 
    public:
       /** Type of system primitive that will be used by critical_resource to synchronize
         * resource.
         */
+      resource_sync_policy();
       typedef Lock_facility locker_type;
 
       /** @name Synchronization static methods.

@@ -2,7 +2,7 @@ SHELL = /bin/bash
 
 CC = g++
 
-CFLAGS = -g -c -O0 -Wall -I../../include/ -DLWSYNC_HAS_NO_BOOST -I/usr/include/mysql -I/usr/include/mysql++ -Iinclude -llacewing -lmysqlclient -lmysqlpp
+CFLAGS = -g -c -O0 -Wall -I../../include/ -DLWSYNC_HAS_NO_BOOST -I/usr/include/mysql -I/usr/include/mysql++ -Iinclude -lv8 -llacewing -lmysqlclient -lmysqlpp
 
 COMPILE = $(CC) $(CFLAGS) -c
 
@@ -30,6 +30,11 @@ authentication.o :
 dotcom.o :
 
 	$(CC) $(CFLAGS) dotcom/*.cpp
+
+
+v8.o :
+
+	$(CC) $(CFLAGS) v8/*.cpp
 
 
 clean :

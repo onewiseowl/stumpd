@@ -13,7 +13,7 @@
 #include <stumpd/load_config.hpp>
 #include <stumpd/database/mysql.hpp>
 #include <stumpd/global_fs/global_fs.hpp>
-
+#include <stumpd/v8/v8.hpp>
 // establish db connection
 extern stumpd::database::mysql *mysql_conn =
   new stumpd::database::mysql();
