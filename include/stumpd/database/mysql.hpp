@@ -10,7 +10,7 @@
 
 #include <semaphore.h>
 #include <mysql++.h>
-
+#include <exceptions.h>
 #define DB_TYPE "mysql"
 
 namespace stumpd
@@ -105,10 +105,17 @@ namespace database
     } else {
       mysqlpp::Connection *db_con = this->pool.grab();
       //std::cout << "Connection db_con addr: " << &db_con << std::endl;
+      mysqlpp::StoreQueryResult results;
       if(db_con->connected() == true)
       {
-        mysqlpp::Query query = db_con->query(query_string);
-        mysqlpp::StoreQueryResult results = query.store();
+        try {
+          mysqlpp::Query query = db_con->query(query_string);
+          results = query.store();
+        } catch(mysqlpp::Exception &e) {
+          fprintf(stdout, "MySQL++ Exception: %s\n", e.what());
+          return data_buf;
+        }
+
         //this->pool[db_fd_i].unlock();
         unsigned int i;
         unsigned int r;

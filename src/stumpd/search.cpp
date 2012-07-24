@@ -155,7 +155,7 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
       from_date = from_date + 86400;
     }
 
-   fprintf(stdout, "Query: %s\n", mysql_query_string.c_str());
+   //fprintf(stdout, "Query: %s\n", mysql_query_string.c_str());
 
     query_results =
       mysql_conn->query(mysql_query_string.c_str());

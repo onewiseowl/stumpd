@@ -1,5 +1,13 @@
 #!/bin/bash
 
+if [ $1 =! /200./ ]
+then
+
+  echo $1
+
+else
+  echo doesnt work
+fi
 YEAR=$(date +%Y);
 
 i=0;

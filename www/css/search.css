@@ -26,7 +26,8 @@ body {
 
 input._queryInput {
  font-family: "sansation";
- font-weight: bold;
+ /*font-family: "Anonymous";*/
+ /*font-weight: bold;*/
  width: 95%;
  font-size: 16px;
  background: #777777;
@@ -34,7 +35,6 @@ input._queryInput {
  margin-left: 2.5%;
  margin-right: 2.5%;
  color: #ffffff;
- font-family: "sansation";
 }
 
 a._queryInput_submit {
@@ -62,6 +62,7 @@ div._searchContainer {
  font-family: "sansation";
  font-weight: bold;
  width: 95%;
+ max-height: 1000px;
  font-size: 10px;
  background: #777777;
  margin-top: 25px;
@@ -70,6 +71,7 @@ div._searchContainer {
  color: #ffffff;
  font-family: "sansation";
  display: none; 
+ overflow-y: scroll;
 }
 
 TABLE._searchResults {
@@ -79,7 +81,6 @@ TABLE._searchResults {
 
 
 TD.sortable {
-        border: solid 1px;
         white-space: pre-wrap; /* css-3 */
         white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
         white-space: -pre-wrap; /* Opera 4-6 */
