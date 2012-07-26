@@ -18,10 +18,21 @@
 extern stumpd::database::mysql *mysql_conn =
   new stumpd::database::mysql();
 
+extern stumpd::v8_pool *js_worker_pool =
+  new stumpd::v8_pool(50);
+
+//extern lwsync::critical_resource < stumpd::v8_pool*> > js_worker_pool = 
+//  new stumpd::v8_pool(5);
+
 #include <stumpd/dotcom/dotcom.hpp>
 #include <stumpd/authentication/authentication.hpp>
 #include <stumpd/search.hpp>
 #include <stumpd/sighandler.hpp>
+
+#include <b64/cencode.h>
+#include <b64/encode.h>
+#include <b64/cdecode.h>
+#include <b64/decode.h>
 
 #define gettid() syscall(__NR_gettid) 
 
@@ -64,6 +75,10 @@ main( int argc, char **argv )
   //search.query(time(NULL) - 86400, time(NULL), test, test, "+\"dogturds\"");
 
   fprintf(stdout, "After dotcom\n");
+
+  base64::decoder d;
+
+  fprintf(stdout, "base64 decode test: %s\n", d.decode(std::string("anVzdCBhIHRlc3QgbW9mdWdndWg=")).c_str());
 
   while(1)
   {

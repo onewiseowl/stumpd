@@ -14,7 +14,7 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
 
   if(strlen(Request.URL()) == 0 || (strlen(Request.URL()) == 1 && strncmp(Request.URL(), "/", 1) == 0))
   {  
-    fprintf(stdout, "Sending index\n");
+    //fprintf(stdout, "Sending index\n");
     if(this->auth->ask(Request) != NULL)
     {
       Request.Header("Location", "/search"); 
@@ -100,17 +100,29 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
       // placeholder for dotcom API functionality (mostly just for upload/login etc)
       
       // We leave it up to the API to set Request.Status
-      this->api(Webserver, Request);
+      if(strcmp(Request.POST("action"), "login") == 0)
+      {
+        //fprintf(stdout, "Processing API request\n");
+        this->api(Webserver, Request);
+      } else {
+        session = this->auth->ask(Request);
+        if(session != NULL)
+        {
+          this->api(Webserver, Request); 
+        }else {
+          Request.Status(401, "Authentication Required");
+        }
+      }
     } else
     {
       //fprintf(stdout, "Attempting to send file: %s\n", std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str());
       // Assume that it is a file, and if so, send it
       if(Request.URL()[strlen(Request.URL()) - 1] == '?')
       {
-        fprintf(stdout, "URL has a question mark on it\n");
+        //fprintf(stdout, "URL has a question mark on it\n");
         ret = stat(std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 1)).c_str(), &stat_buf);
       } else {
-        fprintf(stdout, "No question mark in URL\n");
+        //fprintf(stdout, "No question mark in URL\n");
         ret = stat(std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str(), &stat_buf);
       }
 
@@ -119,10 +131,10 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
         Request.GuessMimeType(Request.URL());
         if(Request.URL()[strlen(Request.URL()) - 1] == '?')
         {
-          fprintf(stdout, "Sending file; %s\n", std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 1)).c_str());
+          //fprintf(stdout, "Sending file; %s\n", std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 1)).c_str());
           Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 1)).c_str());
         } else {
-        fprintf(stdout, "No question mark in URL\n");
+          //fprintf(stdout, "No question mark in URL\n");
           Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str());
         }
 
@@ -140,6 +152,4 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
       }
     }
   
-  //Request.Finish();
-
 }

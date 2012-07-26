@@ -29,6 +29,14 @@ var include = function(script_source) {
   })
   } else {
     var dt = 'script';
+    $('head').append(
+      $('<script></script>').attr({
+        language : 'javascript',
+        type : 'text/javascript',
+        src : script_source
+      })
+    );
+    /*
     $.ajax({
       async : false,
       url : script_source,
@@ -39,12 +47,14 @@ var include = function(script_source) {
         try {
           eval(data);
         } catch (e) {
-          if (e instanceof SyntaxError) {
-            alert(e.message);
-          }
+          //if (e instanceof SyntaxError) {
+          //  alert(e.message);
+          //}
+          alert(e);
         }
       }
     })
+    */
   }
 
 
@@ -78,6 +88,7 @@ if(!isFontFaceSupported)
 var widgets = ({
 // First, we do a feature test
   loadWidgets : function() {
+    include('/js/jquery.base64.js');
     switch(window.location.pathname) {
       case '/':
       case '/index.html':

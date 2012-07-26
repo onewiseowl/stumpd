@@ -76,6 +76,9 @@ namespace stumpd {
       int
       api_getHosts(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
 
+      int
+      api_testScript(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
+
       void
       api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
       

@@ -2,12 +2,14 @@ SHELL = /bin/bash
 
 CC = g++
 
-CFLAGS = -g -c -O0 -Wall -I../../include/ -DLWSYNC_HAS_NO_BOOST -I/usr/include/mysql -I/usr/include/mysql++ -Iinclude -lv8 -llacewing -lmysqlclient -lmysqlpp
+BUFFERSIZE = 16777216
+
+CFLAGS = -g -c -O0 -Wall -I../../include/ -DLWSYNC_HAS_NO_BOOST -I/usr/include/mysql -I/usr/include/mysql++ -Iinclude -lv8 -llacewing -lmysqlclient -lmysqlpp -DBUFFERSIZE=$(BUFFERSIZE) -DENABLE_DEBUGGER_SUPPORT
 
 COMPILE = $(CC) $(CFLAGS) -c
 
 
-all : utilities.o global_fs.o authentication.o dotcom.o
+all : utilities.o global_fs.o authentication.o v8.o dotcom.o
 
 	$(CC) $(CFLAGS) *.cpp
 

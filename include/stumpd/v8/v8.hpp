@@ -12,6 +12,11 @@
 #include <lwsync/critical_resource.hpp>
 #include <lwsync/monitor.hpp>
 
+#include <b64/cencode.h>
+#include <b64/encode.h>
+#include <b64/cdecode.h>
+#include <b64/decode.h>
+
 using namespace v8;
 
   
@@ -46,11 +51,11 @@ namespace stumpd {
       }
   
       size_t
-      count()
+      size()
       {
         return this->workers.access()->size();
       }
-      TryCatch trycatch;
+      //TryCatch trycatch;
   
       class v8_worker {
         protected:
@@ -59,15 +64,15 @@ namespace stumpd {
           //Context::Scope context_scope;
           Handle<String> source; // = String::New("var test = 'Hello' + ', World!'; test;");
           Handle<Script> script; // = Script::Compile(source);
-          HandleScope handle_scope;
+          //HandleScope handle_scope;
           v8_pool *parent;
               
 
          public:
            v8_worker(v8_pool *parent_ptr) {
              this->parent = parent_ptr;
-             this->context = Context::New();
-             Context::Scope context_scope(context);
+             //this->context = Context::New();
+             //Context::Scope context_scope(context);
            }
            int
            release();
@@ -85,7 +90,7 @@ namespace stumpd {
       lwsync::critical_resource < std::vector<v8_worker*> > workers;
       //lwsync::resource_sync_policy::resource_type* pool_lock_type;
       //lwsync::resource_sync_policy::locker_type* pool_lock;
-      lwsync::resource_sync_policy<> pool_lock;
+      //lwsync::resource_sync_policy<> pool_lock;
       friend int v8_worker::release();
       //void
       //lock();  

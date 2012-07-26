@@ -35,7 +35,7 @@ div._toolsMenu {
  margin-top: 5px;
 }
 
-div._toolsFiltersMenu {
+div._toolsSubMenu {
  float: left;
  margin-top: 5px;
 }
@@ -54,3 +54,9 @@ a:hover {
  font-size: 14px;
 }
 
+textarea._jsInterpreter_textarea {
+ float: left;
+ height: 350px;
+ max-height: 350px;
+ width: 99.7%;
+}
