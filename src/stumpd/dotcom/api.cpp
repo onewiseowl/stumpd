@@ -17,6 +17,11 @@ stumpd::dotcom::api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request
     this->api_getFilters(Webserver, Request);
     return;
   } else
+  if(strcmp(Request.POST("action"), "updateFilter") == 0)
+  {
+    this->api_updateFilter(Webserver, Request);
+    return;
+  } else
   if(strcmp(Request.POST("action"), "getInputs") == 0)
   {
     //Request.Write("[{\"/var/www/verifi/logs/stuff/stuff.log\", \"/var/log/auth.log\"}]");

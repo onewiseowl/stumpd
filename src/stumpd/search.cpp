@@ -354,3 +354,27 @@ stumpd::search::json_getFilters()
   json_string.append("]");
   return json_string;
 }
+
+int
+stumpd::search::updateFilter(const char *alias, const char *filter, const char *id)
+{
+
+  #define DB_TYPE "mysql"
+  #define DB_NAME "stump"
+  #define SEARCH_LIMIT "1000"
+
+  if(strcmp(DB_TYPE, "mysql") == 0)
+  {
+      mysql_conn->query(
+        std::string("UPDATE stump.filters set stump.filters.alias='")
+          .append(alias)
+          .append("', stump.filters.filter='")
+          .append(filter)
+          .append("' where stump.filters.id=")
+          .append(id)
+          .append(";").c_str());    
+    return 0;
+  } else {
+    return 1;
+  }
+}

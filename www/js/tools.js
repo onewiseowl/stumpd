@@ -10,6 +10,34 @@ $.extend(widgets, {
           );
         }
       }),
+      update : function(id) {
+        $.ajax({
+        url : "/api",
+        type : "POST",
+        async : false,
+        timeout: 2000,
+        data : {
+          action : 'updateFilter',
+          alias : widgets.tools.filters.list[id][1],
+          filter : $.base64.encode(editAreaLoader.getValue('_filterList_table_edit_textarea')),
+          id : widgets.tools.filters.list[id][0]
+        },
+        complete : function(jqXHR, textStatus)
+        {
+          if(textStatus == "timeout")
+          {
+            alert("Timeout!");
+          }
+        },
+        success : function(data, textStatus, jqXHR) {
+          try {
+            widgets.tools.filters.getExisting();
+          } catch(e) {
+            alert(e);
+          }
+        }
+      });        
+      },
       edit : function(id) {
         try {
           if($('div#_filterList_table_edit_div').length > 0)
@@ -52,6 +80,8 @@ $.extend(widgets, {
             language: 'en',
             min_width: 965,
             min_height: 300,
+            toolbar: "undo, redo, search, save",
+            save_callback: "widgets.tools.filters.update(" + id + ")",
             syntax: 'js'
           });
           //editAreaLoader.show('_filterList_table_edit_textarea');
@@ -153,6 +183,160 @@ $.extend(widgets, {
       ),
       draw : function() {
         widgets.tools.filters.menu.draw();
+      }
+    }),
+    actions : ({
+      list : Array(),
+      add : ({
+        draw : function() {
+          $('body').append(
+            $('<textarea></textarea>')
+          );
+        }
+      }),
+      edit : function(id) {
+        try {
+          if($('div#_filterList_table_edit_div').length > 0)
+          {
+            $('div#_filterList_table_edit_div').empty().remove();
+          }
+          $('body').append(
+            $('<div></div>').attr({
+              id: '_filterList_table_edit_div',
+              name: '_filterList_table_edit_div',
+              class: '_filterList_table_edit_div'
+            }).append(
+              $('<textarea></textarea>').attr({
+                id: '_filterList_table_edit_textarea',
+                name: '_filterList_table_edit_textarea',
+                class: '_filterList_table_edit_textarea'
+              })
+            )
+          );
+          //editAreaLoader.hide('_filterList_table_edit_textarea');
+          $('textarea#_filterList_table_edit_textarea').val($.base64.decode(widgets.tools.actions.list[id][2]));
+          var m = $('div#_filterList_table_edit_div').
+            dialog({
+              modal: true,
+              minWidth: 540,
+              width: 1000,
+              close: function() {
+                try {
+                  editAreaLoader.delete_instance('_filterList_table_edit_textarea');
+                } catch(e) {
+                  alert(e);
+                }
+              }
+            });
+          editAreaLoader.init({
+            id: '_filterList_table_edit_textarea',
+            start_highlight: true,
+            allow_toggle: false,
+            word_wrap: true,
+            language: 'en',
+            min_width: 965,
+            min_height: 300,
+            syntax: 'js'
+          });
+          //editAreaLoader.show('_filterList_table_edit_textarea');
+        } catch(e) {
+          alert(e);
+        }
+      },
+      getExisting : function() {
+        $.ajax({
+        url : "/api",
+        type : "POST",
+        async : false,
+        timeout: 2000,
+        data : {
+          action : 'getActions'
+        },
+        complete : function(jqXHR, textStatus)
+        {
+          if(textStatus == "timeout")
+          {
+            alert("Timeout!");
+          }
+        },
+        success : function(data, textStatus, jqXHR) {
+          try {
+            widgets.tools.actions.list = eval(data);
+          } catch(e) {
+            alert(e);
+          }
+        }
+      });
+      },
+      menu : ({
+        draw : function() {
+          widgets.tools.actions.getExisting();
+          if($('div#_toolsSubMenu').length > 0)
+          {
+            $('div#_toolsSubMenu').empty().remove();
+          }
+
+          $('body').append(
+            $('<div></div>').attr({
+              id : '_toolsSubMenu',
+              name : '_toolsSubMenu',
+              class : '_toolsSubMenu'
+            }).append(
+              $('<table></table>').attr({
+                id : '_filterList_table',
+                name : '_filterList_table',
+                class : '_filterList_table',
+                align: 'left'
+              }).append(
+                $('<tr></tr>').attr({
+                  class : '_filterList_table'
+                }).append(
+                  $('<td></td>').attr({
+                    class: "_filterList_table"
+                  }).text('alias'),
+                  $('<td></td>').attr({
+                    class: "_filterList_table"
+                  }).text('action')
+                )
+              )
+            )
+          );
+          for(i in widgets.tools.actions.list)
+          {
+            $('table#_filterList_table').append(
+              $('<tr></tr>').attr({
+                class: "_filterList_table"
+              }).append(
+                $('<td></td>').attr({
+                  class: "_filterList_table"
+                }).text(widgets.tools.actions.list[i][1]),
+                $('<td></td>').attr({
+                  class: "_filterList_table"
+                }).append(
+                  /*$('<textarea></textarea>').attr({
+                    readonly: "readonly"
+                  }).text(
+                    $.base64.decode(widgets.tools.actions.list[i][2])
+                  )*/
+                  $('<a></a>').attr({
+                    id : '_filterList_table_edit_link',
+                    name: '_filterList_table_edit_link',
+                    href : 'Javascript: widgets.tools.actions.edit(' + i + ')'
+                  }).text('edit |'),
+                  $('<a></a>').attr({
+                    id : '_filterList_table_delete_link',
+                    name : '_filterList_table_delete_link',
+                    href : 'Javascript: widgets.tools.actions.delete(' + i + ')'
+                  }).text(' delete')
+                )
+              )
+            );
+          }
+          }
+        }
+      ),
+      draw : function() {
+        widgets.tools.actions.menu.draw();
       }
     }),
     interpreter : ({
