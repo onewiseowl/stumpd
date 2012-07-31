@@ -35,7 +35,7 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
       } else
       {
         Request.Header("Location", "/login");
-        Request.Status(401, "Object moved");
+        Request.Status(302, "Object moved");
       }
   } else
     if(strncmp(Request.URL(), "upload", 6) == 0)

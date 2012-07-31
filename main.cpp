@@ -46,8 +46,6 @@ main( int argc, char **argv )
   signal(SIGINT,stumpd::sighandler);
 
   
-  fprintf(stdout, "Parent PID %d\n", gettid());
-  
   // parse CLI options
   stumpd::set_cli_opts();
  
@@ -61,8 +59,6 @@ main( int argc, char **argv )
   //stumpd::distribution_queue dqueue;
 
 
-  fprintf(stdout, "*stumpd::database::myql_conn = %0x%x\n", mysql_conn);
-
   stumpd::dotcom stumpd_dotcom;
   //std::vector <std::vector <std::string> > rows =stumpd::database::mysql_conn->query("show databases;");
   //std::cout << "count: " << rows.size() << std::endl;
@@ -73,12 +69,6 @@ main( int argc, char **argv )
 
   //stumpd::search search;
   //search.query(time(NULL) - 86400, time(NULL), test, test, "+\"dogturds\"");
-
-  fprintf(stdout, "After dotcom\n");
-
-  base64::decoder d;
-
-  fprintf(stdout, "base64 decode test: %s\n", d.decode(std::string("anVzdCBhIHRlc3QgbW9mdWdndWg=")).c_str());
 
   while(1)
   {

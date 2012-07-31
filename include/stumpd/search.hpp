@@ -34,6 +34,12 @@ namespace stumpd {
 
       std::string
       json_getHosts();
+
+      std::vector <std::vector <std::string> >
+      getFilters();
+
+      std::string
+      json_getFilters();
   };
 
 }

@@ -60,3 +60,33 @@ textarea._jsInterpreter_textarea {
  max-height: 350px;
  width: 99.7%;
 }
+
+div._toolsSubMenu {
+ width: 99.7%;
+}
+
+table._filterList_table {
+ width: auto;
+ text-align: left;
+}
+
+tr._filterList_table {
+ width: auto;
+ text-align: left;
+}
+
+td._filterList_table {
+ width: auto;
+ text-align: left;
+}
+
+
+div._filterList_table_edit_div {
+ width: auto;
+}
+
+
+textarea._filterList_textarea_edit_textarea {
+ height: auto;
+ float: left;
+}

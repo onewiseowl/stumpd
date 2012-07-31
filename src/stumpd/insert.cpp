@@ -50,7 +50,7 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
     if(data.size() > 0)
       std::sort(data.begin(), data.end(), sort_dates);
 
-    int i;
+    size_t i;
     time_t str_to_date;
 
     for(i=0;i<data.size();i++)

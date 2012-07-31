@@ -318,5 +318,5 @@ stumpd::authentication::logout(Lacewing::Webserver::Request& Request)
       return 0;
     }
   }
-  
+return 0;  
 }

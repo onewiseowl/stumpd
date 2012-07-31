@@ -29,14 +29,6 @@ var include = function(script_source) {
   })
   } else {
     var dt = 'script';
-    $('head').append(
-      $('<script></script>').attr({
-        language : 'javascript',
-        type : 'text/javascript',
-        src : script_source
-      })
-    );
-    /*
     $.ajax({
       async : false,
       url : script_source,
@@ -54,7 +46,6 @@ var include = function(script_source) {
         }
       }
     })
-    */
   }
 
 

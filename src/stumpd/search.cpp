@@ -21,7 +21,7 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
 
     std::string mysql_query_string("");
 
-    struct tm *from_date_buf;
+    //struct tm *from_date_buf;
     from_date_buf = (struct tm*)calloc(sizeof(struct tm), 1);
     
     struct tm *to_date_buf;
@@ -36,13 +36,13 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
     char *epoch_to;
     epoch_to = (char *)calloc(sizeof(char), 20);
 
-    int date_diff;
+    size_t date_diff;
     date_diff =  ((to_date - from_date) / 86400);
     fprintf(stdout, "%ld days different %ld %ld\n", date_diff, to_date, from_date);
 
-    int loop_count;
+    size_t loop_count;
     loop_count = 0;
-    int b;
+    size_t b;
     b = 0;
 
     for(loop_count=0;(date_diff>0)?loop_count<date_diff:loop_count<=date_diff;loop_count++)
@@ -181,9 +181,6 @@ stumpd::search::json_query(time_t from_date, time_t to_date, std::vector <std::s
   std::vector <std::vector <std::string> > search_return;
   std::string json_string("([");
   size_t a;
-  size_t b;
-
-  fprintf(stdout, "from_date: %ld\nto_date: %ld \n\n", from_date, to_date);
 
   search_return = this->query(from_date, to_date, hosts, inputs, query_string);
 
@@ -305,5 +302,55 @@ stumpd::search::json_getHosts()
         json_string.append(",");
   }
   json_string.append("]})");
+  return json_string;
+}
+
+std::vector <std::vector <std::string> >
+stumpd::search::getFilters()
+{
+
+  #define DB_TYPE "mysql"
+  #define DB_NAME "stump"
+  #define SEARCH_LIMIT "1000"
+
+  std::vector <std::vector <std::string> > query_results;
+
+  if(strcmp(DB_TYPE, "mysql") == 0)
+  {
+    query_results =
+      mysql_conn->query("SELECT filters.id,filters.alias,filters.filter from stump.filters");    
+    return query_results;
+  } else {
+    return query_results;
+  }
+}
+
+std::string
+stumpd::search::json_getFilters()
+{
+
+  size_t a;
+
+  std::vector <std::vector <std::string> > search_return;
+  search_return = this->getFilters();
+
+  std::string json_string("[");
+
+  for(a=0;a<search_return.size();a++)
+  {
+    json_string
+      .append("[\"")
+      .append(search_return[a][0])
+      .append("\",")
+      .append("\"")
+      .append(search_return[a][1])
+      .append("\",")
+      .append("\"")
+      .append(search_return[a][2])
+      .append("\"]");
+    if(a < search_return.size() - 1 && search_return.size() > 1)
+        json_string.append(",");
+  }
+  json_string.append("]");
   return json_string;
 }

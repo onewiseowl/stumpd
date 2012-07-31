@@ -37,7 +37,7 @@ namespace stumpd {
     public:
       v8_pool(size_t size)
       {
-        int i;
+        size_t i;
         for(i=0;i<size;i++)
           this->workers.access()->push_back(new v8_pool::v8_worker(this));
       }

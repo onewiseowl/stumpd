@@ -14,8 +14,7 @@ stumpd::dotcom::api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request
   } else
   if(strcmp(Request.POST("action"), "getFilters") == 0)
   {
-    Request.Write("[{\"test filter\":\".*cdrn.*\"}]");
-    //this->api_getFilters(Webserver, Request);
+    this->api_getFilters(Webserver, Request);
     return;
   } else
   if(strcmp(Request.POST("action"), "getInputs") == 0)

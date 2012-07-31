@@ -5,9 +5,6 @@ int
 stumpd::dotcom::api_search(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request)
 {
 
-  int ret;
-  ret = 0;
-  
   time_t from_date;
   from_date = 0;
   
