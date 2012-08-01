@@ -60,7 +60,7 @@ int main(void)
   Context::Scope context_scope(context);
 
   // Create a string containing the JavaScript source code.
-  Handle<String> source = String::New("({\"test\":\"stuff\"})");
+  Handle<String> source = String::New("var test = ({\"test\":\"stuff\"}); test;");
 
   // Compile the source code.
   Handle<Script> script = Script::Compile(source);

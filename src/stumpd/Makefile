@@ -12,7 +12,7 @@ ifeq ($(DEBUG),true)
 CFLAGS=+-g
 endif
 
-CFLAGS = -c -Wall -I../../include/ -I/usr/include/mysql -I/usr/include/mysql++ -Iinclude -DLWSYNC_HAS_NO_BOOST -DBUFFERSIZE=$(BUFFERSIZE)
+CFLAGS = -g -c -Wall -I../../include/ -I/usr/include/mysql -I/usr/include/mysql++ -Iinclude -DLWSYNC_HAS_NO_BOOST -DBUFFERSIZE=$(BUFFERSIZE)
 LDFLAGS= -lv8 -llacewing -lmysqlclient -lmysqlpp
 
 COMPILE = $(CC) $(CFLAGS) -c
@@ -23,7 +23,7 @@ all : utilities.o global_fs.o authentication.o v8.o dotcom.o assorted.o
 
 
 assorted.o :
-	$(CC) $(CFLAGS) insert.cpp  load_config.cpp  search.cpp  set_cli_opts.cpp  sighandler.cpp
+	$(CC) $(CFLAGS) ./*.cpp
 
 
 utilities.o :

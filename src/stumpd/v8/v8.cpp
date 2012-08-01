@@ -123,8 +123,53 @@ stumpd::v8_pool::v8_worker::test(const char *script_string)
 }
 
 const char *
-stumpd::v8_pool::v8_worker::execute(const char *script)
+stumpd::v8_pool::v8_worker::execute(const char *script_string)
 {
-  fprintf(stdout, "Script: %s\n", script);
-  return 0;
+    //TryCatch trycatch;
+
+  Locker lock;
+  lock.StartPreemption(10);
+  // Create a stack-allocated handle scope.
+  HandleScope handle_scope;
+
+  // Create a new context.
+  Persistent<Context> context = Context::New();
+
+  // Enter the created context for compiling and
+  // running the hello world script. 
+  Context::Scope context_scope(context);
+
+  // Create a string containing the JavaScript source code.
+  Handle<String> source = String::New(script_string);
+
+  // Compile the source code.
+  //try {
+    Handle<Script> script = Script::Compile(source);
+  //} catch(v8::TryCatch* try_catch) {
+  //  ReportException(&trycatch);
+  //  return 1;
+  //}
+
+  if(!script.IsEmpty())
+  {
+
+    Handle<Value> result = script->Run();
+
+    // Convert the result to an ASCII string and print it.
+    String::AsciiValue ascii(result);
+
+    // Dispose the persistent context.
+    context.Dispose();
+    lock.StopPreemption();
+   return *ascii;
+  } else {
+  //  ReportException(&trycatch);
+    context.Dispose();
+    lock.StopPreemption();
+    return NULL;
+  }
+
+  context.Dispose();
+  lock.StopPreemption();
+  return NULL;
 }

@@ -5,6 +5,9 @@
 #include <vector>
 #include <string>
 
+#include <stdlib.h>
+#include <stdio.h>
+
 //#include <stumpd/cache.hpp>
 #include <stumpd/config.hpp>
 

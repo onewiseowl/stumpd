@@ -11,7 +11,7 @@ $.extend(widgets, {
         }
       }),
       update : function(id) {
-        alert(id);
+        widgets.tools.interpreter.submit(editAreaLoader.getValue('_filterList_table_edit_textarea'));
         $.ajax({
         url : "/api",
         type : "POST",
@@ -81,8 +81,8 @@ $.extend(widgets, {
             language: 'en',
             min_width: 965,
             min_height: 300,
-            toolbar: "undo, redo, search, save",
-            save_callback: "widgets.tools.filters.update(" + id + ")",
+            toolbar: 'undo, redo, search, save',
+            save_callback: 'widgets.tools.filters.update(' + id + ')',
             syntax: 'js'
           });
           //editAreaLoader.show('_filterList_table_edit_textarea');
@@ -92,8 +92,8 @@ $.extend(widgets, {
       },
       getExisting : function() {
         $.ajax({
-        url : "/api",
-        type : "POST",
+        url : '/api',
+        type : 'POST',
         async : false,
         timeout: 2000,
         data : {
@@ -101,9 +101,9 @@ $.extend(widgets, {
         },
         complete : function(jqXHR, textStatus)
         {
-          if(textStatus == "timeout")
+          if(textStatus == 'timeout')
           {
-            alert("Timeout!");
+            alert('Timeout!');
           }
         },
         success : function(data, textStatus, jqXHR) {
@@ -341,7 +341,7 @@ $.extend(widgets, {
       }
     }),
     interpreter : ({
-      submit : function() {
+      submit : function(data) {
         $.ajax({
         url : "/api",
         type : "POST",
@@ -349,7 +349,7 @@ $.extend(widgets, {
         contentType: 'application/x-www-form-urlencoded',
         data : {
           action : 'testScript',
-          script : editAreaLoader.getValue('_jsInterpreter_textarea')
+          script : data
         },
         success : function(data, textStatus, jqXHR) {
           alert('Code successfully interpreted');
@@ -381,7 +381,7 @@ $.extend(widgets, {
               id: '_jsInterpreter_submit',
               name: '_jsInterpreter_submit',
               class: '_jsInterpreter_submit',
-              href : 'Javascript: widgets.tools.interpreter.submit()'
+              href : 'Javascript: widgets.tools.interpreter.submit(editAreaLoader.getValue(\'_jsInterpreter_textarea\'))'
             }).text('Check syntax')
           )
         );
