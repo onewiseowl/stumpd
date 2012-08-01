@@ -56,7 +56,9 @@ $.extend(widgets, {
                       type : 'text',
                       id : '_loginBox_username_input',
                       name : 'username',
-                      class : '_loginBox_username_input'
+                      class : '_loginBox_username_input',
+                      autocapitalize : 'off',
+                      autocorrect : 'off'
                     })
                   )
                 ),
@@ -70,6 +72,11 @@ $.extend(widgets, {
                       id : '_loginBox_password_input',
                       name : 'password',
                       class : '_loginBox_password_input'
+                    }).keydown('keypress', function(e) {
+                      if(e.which == 13)
+                      {
+                        widgets.index.loginBox.submit();
+                      }
                     })
                   )
                 )

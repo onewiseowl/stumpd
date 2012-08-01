@@ -11,6 +11,7 @@ $.extend(widgets, {
         }
       }),
       update : function(id) {
+        alert(id);
         $.ajax({
         url : "/api",
         type : "POST",
