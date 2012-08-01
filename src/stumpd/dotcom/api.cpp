@@ -12,6 +12,11 @@ stumpd::dotcom::api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request
     this->api_testScript(Webserver, Request);
     return;
   } else
+  if(strcmp(Request.POST("action"), "getTriggers") == 0)
+  {
+    this->api_getTriggers(Webserver, Request);
+    return;
+  } else
   if(strcmp(Request.POST("action"), "getFilters") == 0)
   {
     this->api_getFilters(Webserver, Request);

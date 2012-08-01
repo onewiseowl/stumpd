@@ -186,7 +186,7 @@ $.extend(widgets, {
         widgets.tools.filters.menu.draw();
       }
     }),
-    actions : ({
+    triggers : ({
       list : Array(),
       add : ({
         draw : function() {
@@ -215,7 +215,7 @@ $.extend(widgets, {
             )
           );
           //editAreaLoader.hide('_filterList_table_edit_textarea');
-          $('textarea#_filterList_table_edit_textarea').val($.base64.decode(widgets.tools.actions.list[id][2]));
+          $('textarea#_filterList_table_edit_textarea').val($.base64.decode(widgets.tools.triggers.list[id][2]));
           var m = $('div#_filterList_table_edit_div').
             dialog({
               modal: true,
@@ -251,7 +251,7 @@ $.extend(widgets, {
         async : false,
         timeout: 2000,
         data : {
-          action : 'getActions'
+          action : 'getTriggers'
         },
         complete : function(jqXHR, textStatus)
         {
@@ -262,7 +262,7 @@ $.extend(widgets, {
         },
         success : function(data, textStatus, jqXHR) {
           try {
-            widgets.tools.actions.list = eval(data);
+            widgets.tools.triggers.list = eval(data);
           } catch(e) {
             alert(e);
           }
@@ -271,7 +271,7 @@ $.extend(widgets, {
       },
       menu : ({
         draw : function() {
-          widgets.tools.actions.getExisting();
+          widgets.tools.triggers.getExisting();
           if($('div#_toolsSubMenu').length > 0)
           {
             $('div#_toolsSubMenu').empty().remove();
@@ -302,7 +302,7 @@ $.extend(widgets, {
               )
             )
           );
-          for(i in widgets.tools.actions.list)
+          for(i in widgets.tools.triggers.list)
           {
             $('table#_filterList_table').append(
               $('<tr></tr>').attr({
@@ -310,24 +310,24 @@ $.extend(widgets, {
               }).append(
                 $('<td></td>').attr({
                   class: "_filterList_table"
-                }).text(widgets.tools.actions.list[i][1]),
+                }).text(widgets.tools.triggers.list[i][1]),
                 $('<td></td>').attr({
                   class: "_filterList_table"
                 }).append(
                   /*$('<textarea></textarea>').attr({
                     readonly: "readonly"
                   }).text(
-                    $.base64.decode(widgets.tools.actions.list[i][2])
+                    $.base64.decode(widgets.tools.triggers.list[i][2])
                   )*/
                   $('<a></a>').attr({
                     id : '_filterList_table_edit_link',
                     name: '_filterList_table_edit_link',
-                    href : 'Javascript: widgets.tools.actions.edit(' + i + ')'
+                    href : 'Javascript: widgets.tools.triggers.edit(' + i + ')'
                   }).text('edit |'),
                   $('<a></a>').attr({
                     id : '_filterList_table_delete_link',
                     name : '_filterList_table_delete_link',
-                    href : 'Javascript: widgets.tools.actions.delete(' + i + ')'
+                    href : 'Javascript: widgets.tools.triggers.delete(' + i + ')'
                   }).text(' delete')
                 )
               )
@@ -337,7 +337,7 @@ $.extend(widgets, {
         }
       ),
       draw : function() {
-        widgets.tools.actions.menu.draw();
+        widgets.tools.triggers.menu.draw();
       }
     }),
     interpreter : ({
@@ -417,8 +417,8 @@ $.extend(widgets, {
                 ),
                 $('<td></td>').append(
                   $('<a></a>').attr({
-                    href : 'Javascript: widgets.tools.actions.menu.draw()'
-                  }).text('actions')
+                    href : 'Javascript: widgets.tools.triggers.menu.draw()'
+                  }).text('triggers')
                 ),
                 $('<td></td>').append(
                   $('<a></a>').attr({

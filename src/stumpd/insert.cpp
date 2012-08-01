@@ -10,6 +10,8 @@
 
 #define DB_TYPE "mysql"
 
+extern stumpd::database::mysql *mysql_conn;
+
 bool
 sort_dates( std::vector <std::string>i, std::vector<std::string> j)
 {
@@ -46,6 +48,7 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
   {
 
   std::string insert_query;
+  std::vector <std::vector < std::string > > results;
 
     if(data.size() > 0)
       std::sort(data.begin(), data.end(), sort_dates);
@@ -82,13 +85,13 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
         strncpy(ymd_old, ymd, 10);
 
         insert_query
-          .append("INSERT INTO documents_")
+          .append("INSERT INTO `documents_")
           .append(
             std::string(ymd)
               .substr(0, 4))
-          .append(".")
+          .append("`.`")
           .append(ymd)
-          .append("(date, host, source, content) VALUES ");
+          .append("`(date, host, input, content) VALUES ");
           start = !start;
       }
 
@@ -106,9 +109,15 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
         //  insert_query.append(",");
 
     }
-    //fprintf(stdout, "Insert query is: %s\n", insert_query.c_str());
+    fprintf(stdout, "Insert query is: %s\n", insert_query.c_str());
+    results = mysql_conn->query(insert_query.c_str());
     free(ymd);
     free(ymd_old);
+    if(results.size()  == 0)
+      return 1;
+    else
+      return 0;
+
   } else
   if(strcmp(DB_TYPE, "clucene") == 0)
   {
@@ -124,7 +133,7 @@ size_t
 stumpd::insert::insert_json_data(std::string json_data)
 {
 
-  // curl -D /dev/stdout -d 'action=insert&documents=[{"date":"1341941621","host":"ganja.onewiseowl.com","source":"/var/log/auth.log","content":"Jul 10 10:35:19 ganja sudo: pam_unix(sudo:session): session opened for user root by cdickey(uid=1000"}]' http://10.10.0.2:8081/api
+  // curl -D /dev/stdout -d 'action=insert&documents=[{"date":"1341941621","host":"ganja.onewiseowl.com","input":"/var/log/auth.log","content":"Jul 10 10:35:19 ganja sudo: pam_unix(sudo:session): session opened for user root by cdickey(uid=1000"}]' http://10.10.0.2:8081/api
 
 
   size_t document_count;
@@ -140,13 +149,14 @@ stumpd::insert::insert_json_data(std::string json_data)
   if(!reader.parse( json_data, root ))
   {
     fprintf(stderr, "Error parsing json_data: %s\n%s\n", reader.getFormatedErrorMessages().c_str(), json_data.c_str());
+    return 0;
   } else {
 
     for(document_count=0;document_count<root.size();document_count++)
     {
       document.push_back(root[document_count]["date"].asString());
       document.push_back(root[document_count]["host"].asString());
-      document.push_back(root[document_count]["source"].asString());
+      document.push_back(root[document_count]["input"].asString());
       document.push_back(root[document_count]["content"].asString());
       data.push_back(document);
      document.clear();

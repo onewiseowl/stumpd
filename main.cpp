@@ -58,6 +58,9 @@ main( int argc, char **argv )
   // start distribution queue
   //stumpd::distribution_queue dqueue;
 
+  //stumpd::load_filters();
+  //stumpd::load_triggers();
+
 
   stumpd::dotcom stumpd_dotcom;
   //std::vector <std::vector <std::string> > rows =stumpd::database::mysql_conn->query("show databases;");

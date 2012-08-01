@@ -7,6 +7,8 @@
 #include <jsonpp/reader.h>
 #include <jsonpp/writer.h>
 
+#include <stumpd/database/mysql.hpp>
+
 namespace stumpd {
 
   class insert {

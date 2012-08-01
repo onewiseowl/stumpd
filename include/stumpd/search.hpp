@@ -38,11 +38,18 @@ namespace stumpd {
       std::vector <std::vector <std::string> >
       getFilters();
 
+      std::string
+      json_getFilters();
+
+      std::string
+      json_getTriggers();
+
+      std::vector <std::vector <std::string> >
+      getTriggers();
+
       int
       updateFilter(const char* alias, const char *filter, const char *id);
 
-      std::string
-      json_getFilters();
   };
 
 }

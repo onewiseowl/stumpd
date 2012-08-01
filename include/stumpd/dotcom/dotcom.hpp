@@ -83,6 +83,9 @@ namespace stumpd {
       api_getFilters(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
 
       int
+      api_getTriggers(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
+
+      int
       api_updateFilter(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
 
       void

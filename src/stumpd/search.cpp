@@ -61,10 +61,11 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
 
       mysql_query_string
         .append("(SELECT * FROM ")
-        .append("documents_")
+        .append("`documents_")
         .append(year)
-        .append(".")
-        .append(year_month_day);
+        .append("`.`")
+        .append(year_month_day)
+        .append("`");
 
       if(inputs.size() > 0)
       {
@@ -142,8 +143,8 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
           .append(" AND MATCH content AGAINST('")
           .append(query_string)
           .append("' IN BOOLEAN MODE) LIMIT ")
-          .append(SEARCH_LIMIT)
-          .append(")");
+          .append(SEARCH_LIMIT);
+          //.append(")");
       }
 
       mysql_query_string
@@ -377,4 +378,54 @@ stumpd::search::updateFilter(const char *alias, const char *filter, const char *
   } else {
     return 1;
   }
+}
+
+std::vector <std::vector <std::string> >
+stumpd::search::getTriggers()
+{
+
+  #define DB_TYPE "mysql"
+  #define DB_NAME "stump"
+  #define SEARCH_LIMIT "1000"
+
+  std::vector <std::vector <std::string> > query_results;
+
+  if(strcmp(DB_TYPE, "mysql") == 0)
+  {
+    query_results =
+      mysql_conn->query("SELECT triggers.id,triggers.alias,triggers.`trigger` from stump.triggers");    
+    return query_results;
+  } else {
+    return query_results;
+  }
+}
+
+std::string
+stumpd::search::json_getTriggers()
+{
+
+  size_t a;
+
+  std::vector <std::vector <std::string> > search_return;
+  search_return = this->getTriggers();
+
+  std::string json_string("[");
+
+  for(a=0;a<search_return.size();a++)
+  {
+    json_string
+      .append("[\"")
+      .append(search_return[a][0])
+      .append("\",")
+      .append("\"")
+      .append(search_return[a][1])
+      .append("\",")
+      .append("\"")
+      .append(search_return[a][2])
+      .append("\"]");
+    if(a < search_return.size() - 1 && search_return.size() > 1)
+        json_string.append(",");
+  }
+  json_string.append("]");
+  return json_string;
 }
