@@ -116,8 +116,9 @@ stumpd::authentication::ask_userpass(Lacewing::Webserver::Request &Request, cons
       {
         if(strncmp(password, split_userpass[1].c_str(), strlen(password)) == 0)
         {
+
           stumpd::authentication_session *session;
-          session = new stumpd::authentication_session(username, password);
+          session = new stumpd::authentication_session(username, password, false);
 
           this->sessions.access()->insert(std::pair<const char *, stumpd::authentication_session*>(session->get_session_id().c_str(), session));
           fclose(fp);

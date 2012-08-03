@@ -24,8 +24,15 @@ stumpd::dotcom_onGet(Lacewing::Webserver &Webserver, Lacewing::Webserver::Reques
 }
 
 void
+stumpd::dotcom_onError (Lacewing::Webserver &Webserver, Lacewing::Error &Error)
+{
+  fprintf(stdout, "Oops, we encountered an error: %s\n", Error.ToString());
+}
+
+void
 stumpd::dotcom_onPost(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request)
 {
+  fprintf(stdout, "We just got a POST request\n");
   if(strcmp(Request.URL(), "api") == 0)
   {
     //std::vector<const char*> params;

@@ -1,5 +1,7 @@
 #include <stumpd/v8/v8.hpp>
 
+extern stumpd::v8_pool *js_worker_pool;
+
 const char* ToCString(const v8::String::Utf8Value& value) {
   return *value ? *value : "<string conversion failed>";
 }
@@ -53,11 +55,11 @@ stumpd::v8_pool::grab()
 
   if(this->workers.access()->size() == 0)
   {
-    worker = new stumpd::v8_pool::v8_worker(this);
+    worker = new stumpd::v8_pool::v8_worker;
     //this->workers.access()->push_back(worker);
   } else {
-    worker = this->workers.access()->back();
-    this->workers.access()->pop_back();
+    worker = this->workers.access()->front();
+    this->workers.access()->pop();
   }
 
   //this->pool_lock.unlock();
@@ -70,9 +72,9 @@ stumpd::v8_pool::v8_worker::release()
 {
   Locker lock;
   lock.StartPreemption(10);
-  //parent->pool_lock.lock();
-  parent->workers.access()->push_back(this);
-  //parent->pool_lock.unlock();
+  //js_worker_pool->pool_lock.lock();
+  js_worker_pool->workers.access()->push(this);
+  //js_worker_pool->pool_lock.unlock();
   lock.StopPreemption();
   return 0;
 }
@@ -108,21 +110,23 @@ stumpd::v8_pool::v8_worker::test(const char *script_string)
 
   if(!script.IsEmpty())
   {
-    lock.StopPreemption();
     context.Dispose();
+    lock.StopPreemption();
     return 0;
   } else {
   //  ReportException(&trycatch);
+    context.Dispose();
     lock.StopPreemption();
     return 1;
   }
 
-  fprintf(stdout, "Script: %s\n", script_string);
+  context.Dispose();
+  fprintf(stdout, "Weird Script: %s\n", script_string);
   lock.StopPreemption();
   return 0;
 }
 
-const char *
+std::string
 stumpd::v8_pool::v8_worker::execute(const char *script_string)
 {
     //TryCatch trycatch;
@@ -144,7 +148,7 @@ stumpd::v8_pool::v8_worker::execute(const char *script_string)
 
   // Compile the source code.
   //try {
-    Handle<Script> script = Script::Compile(source);
+  Handle<Script> script = Script::Compile(source);
   //} catch(v8::TryCatch* try_catch) {
   //  ReportException(&trycatch);
   //  return 1;
@@ -152,24 +156,27 @@ stumpd::v8_pool::v8_worker::execute(const char *script_string)
 
   if(!script.IsEmpty())
   {
-
+  
     Handle<Value> result = script->Run();
 
     // Convert the result to an ASCII string and print it.
     String::AsciiValue ascii(result);
 
-    // Dispose the persistent context.
+     // Dispose the persistent context.
     context.Dispose();
     lock.StopPreemption();
-   return *ascii;
+    fprintf(stdout, "Returning: %s\n", *ascii);
+    return std::string(*ascii);
   } else {
   //  ReportException(&trycatch);
     context.Dispose();
     lock.StopPreemption();
-    return NULL;
+    //return NULL;
+    return std::string("[{}]");
   }
 
   context.Dispose();
   lock.StopPreemption();
-  return NULL;
+  //return NULL;
+   return std::string("[{}]");
 }

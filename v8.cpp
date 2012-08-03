@@ -60,8 +60,7 @@ int main(void)
   Context::Scope context_scope(context);
 
   // Create a string containing the JavaScript source code.
-  Handle<String> source = String::New("var test = ({\"test\":\"stuff\"}); test;");
-
+  Handle<String> source = String::New("var data = [{\"date\":\"1343932741\",\"host\":\"ganja\",\"input\":\"/var/log/auth.log\",\"content\":\"Aug 2 11:39:01 ganja CRON[16863]: pam_unix(cron:session): session closed for user root\"}];\nvar filterFunction = function(data) {\nfor(i in data)\n  {\n    if(data[i].host.match(/vpn/))\n    {\n      data.splice(i, 1);\n      // test\n    }\n  }\n\n  return data;\n}	\nvar filteredOutput = filterFunction(data);\nJSON.stringify(filteredOutput);\n");
   // Compile the source code.
   Handle<Script> script = Script::Compile(source);
 

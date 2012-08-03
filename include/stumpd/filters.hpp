@@ -14,7 +14,7 @@ namespace stumpd {
   int
   load_filters();
 
-  const char *
+  std::string
   execute_filters(const char *data);
 
 }

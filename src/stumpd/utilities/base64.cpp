@@ -73,7 +73,7 @@ stumpd::utilities::base64::decode( char *in_data, char *out_data, int in_len )
     for (count=0;count<in_len;) {
         for( len = 0, i = 0; i < 4; i++ ) {
             v = 0;
-            while( count<in_len && v == 0 ) {
+            while( count<in_len-1 && v == 0 ) {
                 v = (unsigned char) *in_data_new++;
                 v = (unsigned char) ((v < 43 || v > 122) ? 0 : stumpd::utilities::base64::cd64[ v - 43 ]);
                 if( v ) {
@@ -99,6 +99,7 @@ stumpd::utilities::base64::decode( char *in_data, char *out_data, int in_len )
         }
       }
     //in_data = in_data_orig;
+    fprintf(stdout, "last char: %c and %d\n", out_data[0], out_data[0]);
     out_data = out_data_orig;
 }
 
@@ -111,18 +112,18 @@ stumpd::utilities::base64::decode(std::string input)
   {
 
     char *output;
-    output = NULL;
-    output = (char*)malloc(sizeof(char)*input.length()+2);
+    output = (char*)malloc(sizeof(char)*input.length()+20);
+    memset(output, '\0', input.length()+20);
 
     if(output != NULL)
     {
 
-      memset(output, '\0', input.length()+2);
-      stumpd::utilities::base64::decode((char *)input.c_str(), output, input.length()-1);
+      //memset(output, '\0', input.length()+2);
+      stumpd::utilities::base64::decode((char *)input.c_str(), output, input.length());
       std::string output_str(output);  
   
       free(output);
-      return output_str;
+      return output_str.substr(0, output_str.length());
     } else {
       return std::string(NULL);
     }

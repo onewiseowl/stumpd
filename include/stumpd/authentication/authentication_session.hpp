@@ -32,7 +32,7 @@ namespace stumpd {
       persist();
 
     public:
-      authentication_session(std::string new_username, std::string new_password)
+      authentication_session(std::string new_username, std::string new_password, bool doPersist = true)
       {
         username = new_username;
         password = new_password;
@@ -59,8 +59,9 @@ namespace stumpd {
 
         free(session_id_buf);
         free(session_id_buf_md5);
-       
-        this->persist();
+      
+        if(doPersist == true)
+          this->persist();
  
       }
       authentication_session(const authentication_session& session)

@@ -26,6 +26,9 @@ namespace stumpd {
   dotcom_httpd_thread_callback(void *input);
 
   void
+  dotcom_onError (Lacewing::Webserver &Webserver, Lacewing::Error &Error);
+
+  void
   dotcom_onGet(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
 
   void
@@ -118,6 +121,7 @@ namespace stumpd {
         
         this->dotcom_webserver->EnableManualRequestFinish();
 
+        this->dotcom_webserver->onError(dotcom_onError);
         this->dotcom_webserver->onGet(dotcom_onGet);
         this->dotcom_webserver->onPost(dotcom_onPost);
         this->dotcom_webserver->onUploadPost(dotcom_onUploadPost);
