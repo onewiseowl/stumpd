@@ -48,7 +48,7 @@ namespace stumpd {
         
         snprintf(session_id_buf, 32, "%d%d%d%d", rand(), rand(), rand(), rand());
 
-        Lacewing::MD5_Hex(session_id_buf_md5, session_id_buf, strlen(session_id_buf));
+        lw_md5_hex(session_id_buf_md5, session_id_buf, strlen(session_id_buf));
 
         session_id.assign(session_id_buf);
 

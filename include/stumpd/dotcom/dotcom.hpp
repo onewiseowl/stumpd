@@ -106,13 +106,13 @@ namespace stumpd {
 
         this->auth = new stumpd::authentication(stumpd::config::auth_type);
 
-        stumpd::dotcom::document_root = (char*)malloc(sizeof(char)*1024);
-        memset(stumpd::dotcom::document_root, 0, 1024);
-        getcwd(stumpd::dotcom::document_root, 1024);
+        stumpd::dotcom::document_root = (char*)malloc(sizeof(char)*2048);
+        memset(stumpd::dotcom::document_root, 0, 2048);
+        getcwd(stumpd::dotcom::document_root, 2048);
         strcat(stumpd::dotcom::document_root, "/www");
 
         this->dotcom_httpd_filter.LocalPort(DOTCOM_HTTPD_PORT);
-        this->dotcom_httpd_filter.Reuse(true);
+        //this->dotcom_httpd_filter.Reuse(true);
         this->dotcom_httpd_filter.IPv6(false);
 
         this->dotcom_httpd_thread = new Lacewing::Thread("dotcom_httpd_thread", (void*)dotcom_httpd_thread_callback);

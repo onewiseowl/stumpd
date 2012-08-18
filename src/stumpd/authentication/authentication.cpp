@@ -37,7 +37,7 @@ stumpd::authentication::ask(Lacewing::Webserver::Request& Request)
         md5_password = (char*)malloc(sizeof(char)*33);
         memset(md5_password, '\0', 33);
 
-        Lacewing::MD5_Hex(md5_password, basic_auth_split[1].c_str(), basic_auth_split[1].length());
+        lw_md5_hex(md5_password, basic_auth_split[1].c_str(), basic_auth_split[1].length());
 
         session =
         this->ask_userpass(Request, basic_auth_split[0].c_str(), md5_password);
@@ -66,7 +66,7 @@ stumpd::authentication::ask(Lacewing::Webserver::Request& Request)
       md5_password = (char*)malloc(sizeof(char)*33);
       memset(md5_password, '\0', 33);
 
-      Lacewing::MD5_Hex(md5_password, Request.POST("password"), strlen(Request.POST("password")));
+      lw_md5_hex(md5_password, Request.POST("password"), strlen(Request.POST("password")));
 
       stumpd::authentication_session* session;
       session = this->ask_userpass(Request, Request.POST("username"), md5_password);
