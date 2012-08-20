@@ -1,0 +1,21 @@
+The Lacewing library has issues with HTTP 1.1 posts larger than 1024 bytes, so we are forced to use a UDP client/server setup that sends data over a custom datatype with hashes.
+
+* Client negotiation request and data inserts:
+*
+* md5sum pre encoding and chunking ,total-parts,total-size
+*
+* Server sends back:
+* unique-id (address of session object hashed),sequence(0 for this negotiation),http style status code int
+*
+* Client begins to send chunks in order, waits for confirmation of each one from server
+*
+* unique-id,sequence,md5hash of data chunk,base64 encoded data chunk
+*
+*
+* server reply
+* 
+* unique-id,sequence,http style status code int
+*
+* Once all chunks are accounted for, they are joined and the initial md5sum is compared
+* If the sum does not match, the record is dropped and a response is sent to the client
+* (this is in practice not done, because each chunk is summed)

@@ -7,7 +7,6 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
   int ret;
   stumpd::authentication_session *session;
   struct stat stat_buf;
-
   // initialize vars
   ret = 0;
   session = NULL;
@@ -122,22 +121,24 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
       if(Request.URL()[strlen(Request.URL()) - 1] == '?')
       {
         //fprintf(stdout, "URL has a question mark on it\n");
-        ret = stat(std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 2)).c_str(), &stat_buf);
+        ret = stat(std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 1)).c_str(), &stat_buf);
       } else {
         //fprintf(stdout, "No question mark in URL\n");
-        ret = stat(std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 1)).c_str(), &stat_buf);
+        ret = stat(std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str(), &stat_buf);
       }
 
       if(ret == 0 && S_ISREG(stat_buf.st_mode))
       {
-        Request.GuessMimeType(std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 1)).c_str());
         if(Request.URL()[strlen(Request.URL()) - 1] == '?')
         {
-          //fprintf(stdout, "Sending file; %s\n", std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 1)).c_str());
-          Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 2)).c_str());
+          fprintf(stdout, "Sending file; %s\n", std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str());
+          Request.GuessMimeType(std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str());
+          Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str());
         } else {
-          //fprintf(stdout, "No question mark in URL\n");
-          Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 1)).c_str());
+          fprintf(stdout, "No question mark in URL\n");
+          //Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/").append(std::string(Request.URL()).substr(0, strlen(Request.URL()) - 1)).c_str());
+          Request.GuessMimeType(std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str());
+          Request.WriteFile(std::string(stumpd::dotcom::document_root).append("/").append(Request.URL()).c_str());
         }
 
         return;

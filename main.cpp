@@ -15,6 +15,7 @@
 #include <stumpd/global_fs/global_fs.hpp>
 #include <stumpd/filters.hpp>
 #include <stumpd/v8/v8.hpp>
+#include <stumpd/udp_server.hpp>
 // establish db connection
 extern stumpd::database::mysql *mysql_conn =
   new stumpd::database::mysql();
@@ -64,7 +65,8 @@ main( int argc, char **argv )
 
 
   stumpd::dotcom stumpd_dotcom;
-  //std::vector <std::vector <std::string> > rows =stumpd::database::mysql_conn->query("show databases;");
+  stumpd::udp_server udpserver; 
+ //std::vector <std::vector <std::string> > rows =stumpd::database::mysql_conn->query("show databases;");
   //std::cout << "count: " << rows.size() << std::endl;
   //std::cout << "rows[0].size: " << rows[0].size() << std::endl;
   //std::cout << "rows[0][rows[0].size()]: " << rows[0][rows[0].size()-1] << std::endl;

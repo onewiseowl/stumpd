@@ -112,7 +112,7 @@ namespace stumpd {
         strcat(stumpd::dotcom::document_root, "/www");
 
         this->dotcom_httpd_filter.LocalPort(DOTCOM_HTTPD_PORT);
-        //this->dotcom_httpd_filter.Reuse(true);
+        this->dotcom_httpd_filter.Reuse(true);
         this->dotcom_httpd_filter.IPv6(false);
 
         this->dotcom_httpd_thread = new Lacewing::Thread("dotcom_httpd_thread", (void*)dotcom_httpd_thread_callback);
