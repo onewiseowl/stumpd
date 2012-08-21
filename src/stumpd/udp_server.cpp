@@ -1,4 +1,5 @@
 #include <stumpd/udp_server.hpp>
+#include <stumpd/utilities/split.hpp>
 
 void stumpd::udp_server_thread_callback(void *input)
 {
