@@ -8,7 +8,8 @@ void stumpd::udp_server_thread_callback(void *input)
 
 void stumpd::udp_onReceive (Lacewing::UDP &UDP, Lacewing::Address &Address, char * Data, size_t Size)
 {
-  fprintf(stdout, "Got UDP data %s\n", Data);
-  UDP.Write(Address, Data, Size);
+  fprintf(stdout, "Got UDP data of %ld bytes\n", Size);
+  //UDP.Write(Address, Data, Size);
+  UDP.Write(Address, "Got data!\0", sizeof(char)*10); 
   return;
 }

@@ -32,8 +32,8 @@ stumpd::dotcom_onError (Lacewing::Webserver &Webserver, Lacewing::Error &Error)
 void
 stumpd::dotcom_onPost(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request)
 {
-  fprintf(stdout, "We just got a POST request\n");
-  if(strcmp(Request.URL(), "api") == 0)
+  fprintf(stdout, "We just got a POST request for \"%s\"\n", Request.URL());
+  if(strncmp(Request.URL(), "api", 3) == 0)
   {
     //std::vector<const char*> params;
     //params = Request.RequestParams();
@@ -42,6 +42,8 @@ stumpd::dotcom_onPost(Lacewing::Webserver &Webserver, Lacewing::Webserver::Reque
       //std::cout << "Found POST param: " << params[i] << std::endl;
     //std::cout << "dotcom_onPost..." << std::endl;
     ((stumpd::dotcom *)Webserver.CallbackPointer)->page_method(Webserver, Request);
+  } else {
+    Request.Status(400, "Not Found");
   }
   Request.Finish();
 }

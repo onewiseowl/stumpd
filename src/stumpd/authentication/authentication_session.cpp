@@ -53,10 +53,9 @@ stumpd::authentication_session::persist()
   FILE* fp;
   struct stat stat_buf;
 
-  stat(SESSION_PERSIST_PATH, &stat_buf);
-
-  if(!S_ISDIR(stat_buf.st_mode))
+  if(stat(SESSION_PERSIST_PATH, &stat_buf) != 0)
   {
+  //if(!S_ISDIR(stat_buf.st_mode))
     if(mkdir(SESSION_PERSIST_PATH, S_IRUSR|S_IWUSR|S_IXUSR|S_IRGRP|S_IWGRP|S_IXGRP) != 0)
     {
       fprintf(

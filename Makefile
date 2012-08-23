@@ -45,5 +45,6 @@ stumpd:
 clean :
 
 	$(MAKE) -C src/jsonpp/ clean
+	$(MAKE) -C src/b64/ clean
 	$(MAKE) -C src/stumpd/ clean
 	rm -f stumpd

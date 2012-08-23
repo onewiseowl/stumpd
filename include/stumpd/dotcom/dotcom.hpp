@@ -137,6 +137,7 @@ namespace stumpd {
       ~dotcom()
       {
         fprintf(stdout, "Deleting dotcom\n");
+        this->dotcom_webserver->Unhost();
         delete(this->dotcom_httpd_thread);
         delete(this->auth);
         free(this->document_root);

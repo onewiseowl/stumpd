@@ -24,7 +24,7 @@ stumpd::load_filters()
   if(query_results.size() > 0)
   {
     stumpd::filters = query_results;
-    fprintf(stdout, "Got %d filters\n", stumpd::filters.size());
+    fprintf(stdout, "Got %ld filters\n", stumpd::filters.size());
     return query_results.size();
   } else {
     return query_results.size();
@@ -44,7 +44,7 @@ stumpd::execute_filters(const char *data)
 
   stumpd::v8_pool::v8_worker *js_worker;
 
-  js_worker_pool->grab();
+  js_worker = js_worker_pool->grab();
 
   base64::decoder b64d;
 

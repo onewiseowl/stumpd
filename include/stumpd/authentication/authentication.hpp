@@ -90,7 +90,7 @@ namespace stumpd {
       ask(Lacewing::Webserver::Request& Request);
 
       authentication_session*
-      ask_userpass(Lacewing::Webserver::Request& Request, const char* username, const char *password);
+      ask_userpass(Lacewing::Webserver::Request& Request, const char* username, const char *password, bool doPersist = true);
 
       authentication_session*
       ask_cookie(Lacewing::Webserver::Request& Request);

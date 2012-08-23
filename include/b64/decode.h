@@ -41,10 +41,9 @@ namespace base64
                 {
                         base64_init_decodestate(&_state);
                         char *plaintext_out;
-                        int ret = 0;
                         std::string return_string;
                         plaintext_out = (char*)calloc(sizeof(char), code_in.length() + 5);
-                        ret = base64_decode_block(code_in.c_str(), code_in.length(), plaintext_out, &_state);
+                        base64_decode_block(code_in.c_str(), code_in.length(), plaintext_out, &_state);
                         return_string.assign(plaintext_out);
                         free(plaintext_out);
                         return return_string;

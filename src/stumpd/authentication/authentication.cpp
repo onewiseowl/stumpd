@@ -5,6 +5,7 @@
 stumpd::authentication_session*
 stumpd::authentication::ask(Lacewing::Webserver::Request& Request)
 {
+  fprintf(stdout, "Cookie header is: %s\n", Request.Header("cookie"));
   std::string authorization_header(Request.Header("Authorization"));
   if(authorization_header.length() != 0)
   {
@@ -40,7 +41,7 @@ stumpd::authentication::ask(Lacewing::Webserver::Request& Request)
         lw_md5_hex(md5_password, basic_auth_split[1].c_str(), basic_auth_split[1].length());
 
         session =
-        this->ask_userpass(Request, basic_auth_split[0].c_str(), md5_password);
+        this->ask_userpass(Request, basic_auth_split[0].c_str(), md5_password, false);
 
         free(md5_password)
 ;
@@ -69,11 +70,12 @@ stumpd::authentication::ask(Lacewing::Webserver::Request& Request)
       lw_md5_hex(md5_password, Request.POST("password"), strlen(Request.POST("password")));
 
       stumpd::authentication_session* session;
-      session = this->ask_userpass(Request, Request.POST("username"), md5_password);
+      session = this->ask_userpass(Request, Request.POST("username"), md5_password, true);
 
       free(md5_password);
       return session;
     } else
+    fprintf(stdout, "Cookie session: %s\n", Request.Cookie("session"));
     if(strlen(Request.Cookie("session")) > 0)
     {
       fprintf(stdout, "Cookie login!\n");
@@ -90,7 +92,7 @@ stumpd::authentication::ask(Lacewing::Webserver::Request& Request)
 }
 
 stumpd::authentication_session*
-stumpd::authentication::ask_userpass(Lacewing::Webserver::Request &Request, const char *username, const char *password)
+stumpd::authentication::ask_userpass(Lacewing::Webserver::Request &Request, const char *username, const char *password, bool doPersist)
 {
   FILE *fp;
   char *line;
@@ -118,7 +120,7 @@ stumpd::authentication::ask_userpass(Lacewing::Webserver::Request &Request, cons
         {
 
           stumpd::authentication_session *session;
-          session = new stumpd::authentication_session(username, password, false);
+          session = new stumpd::authentication_session(username, password, doPersist);
 
           this->sessions.access()->insert(std::pair<const char *, stumpd::authentication_session*>(session->get_session_id().c_str(), session));
           fclose(fp);

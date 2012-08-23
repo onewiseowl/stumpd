@@ -3,13 +3,6 @@ $.extend(widgets, {
   tools : ({
     filters : ({
       list : Array(),
-      add : ({
-        draw : function() {
-          $('body').append(
-            $('<textarea></textarea>')
-          );
-        }
-      }),
       update : function(id) {
         widgets.tools.interpreter.submit(editAreaLoader.getValue('_filterList_table_edit_textarea'));
         $.ajax({
@@ -39,6 +32,58 @@ $.extend(widgets, {
         }
       });        
       },
+      add : ({
+        draw : function() {
+          try {
+            if($('div#_filterList_table_edit_div').length > 0)
+            {
+              $('div#_filterList_table_edit_div').empty().remove();
+            }
+            $('body').append(
+              $('<div></div>').attr({
+                id: '_filterList_table_edit_div',
+                name: '_filterList_table_edit_div',
+                class: '_filterList_table_edit_div'
+              }).append(
+                $('<textarea></textarea>').attr({
+                  id: '_filterList_table_edit_textarea',
+                  name: '_filterList_table_edit_textarea',
+                  class: '_filterList_table_edit_textarea'
+                })
+              )
+            );
+            //editAreaLoader.hide('_filterList_table_edit_textarea');
+            var m = $('div#_filterList_table_edit_div').
+              dialog({
+                modal: true,
+                minWidth: 540,
+                width: 1000,
+                close: function() {
+                  try {
+                    editAreaLoader.delete_instance('_filterList_table_edit_textarea');
+                  } catch(e) {
+                    alert(e);
+                  }
+                }
+              });
+            editAreaLoader.init({
+              id: '_filterList_table_edit_textarea',
+              start_highlight: true,
+              allow_toggle: false,
+              word_wrap: true,
+              language: 'en',
+              min_width: 965,
+              min_height: 300,
+              toolbar: 'undo, redo, search, save',
+              save_callback: 'widgets.tools.filters.add()',
+              syntax: 'js'
+            });
+            //editAreaLoader.show('_filterList_table_edit_textarea');
+          } catch(e) {
+            alert(e);
+          }
+        }
+      }),
       edit : function(id) {
         try {
           if($('div#_filterList_table_edit_div').length > 0)
@@ -129,6 +174,14 @@ $.extend(widgets, {
               name : '_toolsSubMenu',
               class : '_toolsSubMenu'
             }).append(
+              $('<a></a>').attr({
+                id : '_addFilter_link',
+                name : '_addFilter_link',
+                class : '_addFilter_link',
+                href : 'Javascript: widgets.tools.filters.add.draw();'
+              }).text('+ add new filter'),
+              $('<br />'),
+              $('<br />'),
               $('<table></table>').attr({
                 id : '_filterList_table',
                 name : '_filterList_table',

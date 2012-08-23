@@ -24,7 +24,6 @@ stumpd::search::query(time_t from_date, time_t to_date, std::vector <std::string
     //struct tm *from_date_buf;
     from_date_buf = (struct tm*)calloc(sizeof(struct tm), 1);
     
-    struct tm *to_date_buf;
     to_date_buf = (struct tm*)calloc(sizeof(struct tm), 1);
 
     char *year;

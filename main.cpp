@@ -17,11 +17,9 @@
 #include <stumpd/v8/v8.hpp>
 #include <stumpd/udp_server.hpp>
 // establish db connection
-extern stumpd::database::mysql *mysql_conn =
-  new stumpd::database::mysql();
+stumpd::database::mysql *mysql_conn = new stumpd::database::mysql();
 
-extern stumpd::v8_pool *js_worker_pool =
-  new stumpd::v8_pool(50);
+stumpd::v8_pool *js_worker_pool = new stumpd::v8_pool(50);
 
 //extern lwsync::critical_resource < stumpd::v8_pool*> > js_worker_pool = 
 //  new stumpd::v8_pool(5);
