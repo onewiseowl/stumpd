@@ -83,7 +83,14 @@ int
 stumpd::v8_pool::v8_worker::test(const char *script_string)
 {
 
-  //TryCatch trycatch;
+  TryCatch trycatch;
+
+  std::string script_str("var data = [[]];");
+  script_str.append("\nvar filterFunction = ")
+    .append(script_string)
+    .append("\nvar filteredOutput = filterFunction(data);\n")
+    .append("JSON.stringify(filteredOutput);");
+
 
   Locker lock;
   lock.StartPreemption(10);
@@ -98,15 +105,17 @@ stumpd::v8_pool::v8_worker::test(const char *script_string)
   Context::Scope context_scope(context);
 
   // Create a string containing the JavaScript source code.
-  Handle<String> source = String::New(script_string);
+  Handle<String> source = String::New(script_str.c_str());
 
   // Compile the source code.
-  //try {
-    Handle<Script> script = Script::Compile(source);
-  //} catch(v8::TryCatch* try_catch) {
-  //  ReportException(&trycatch);
-  //  return 1;
-  //}
+  Handle<Script> script;
+  try {
+    script = Script::Compile(source);
+  } catch(v8::TryCatch* try_catch) {
+    fprintf(stderr, "v8 compilation error in script: %s\n", script_str.c_str());
+    ReportException(&trycatch);
+    return 1;
+  }
 
   if(!script.IsEmpty())
   {
@@ -115,6 +124,7 @@ stumpd::v8_pool::v8_worker::test(const char *script_string)
     return 0;
   } else {
   //  ReportException(&trycatch);
+    fprintf(stderr, "v8 compilation error, IsEmpty, in script: %s\n", script_str.c_str());
     context.Dispose();
     lock.StopPreemption();
     return 1;

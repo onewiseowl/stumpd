@@ -13,10 +13,30 @@ var oe = 0;
 $.extend(widgets, {
   search : ({
     table : ({
+      drawSpinner : function() {
+        if($('div#_searchContainer').length > 0)
+        {
+          //console.log("div#_searchContainer exists, destroying");
+          $('div#_searchContainer').fadeOut(1000);
+          $('div#_searchContainer').empty().remove();
+
+        }
+        $('body').append(
+          $('<div></div>').attr({
+            id : '_searchContainer',
+            name : '_searchContainer',
+            class : '_searchContainer'
+          }).append(
+            $('<img></img>').attr({
+              src : '/images/small-spinner.gif'
+            })
+          )
+        )
+      },
       draw : function(search_results) {
         if($('div#_searchContainer').length > 0)
         {
-          console.log("div#_searchContainer exists, destroying");
+          //console.log("div#_searchContainer exists, destroying");
           $('div#_searchContainer').fadeOut(1000);
           $('div#_searchContainer').empty().remove();
           
@@ -71,8 +91,8 @@ $.extend(widgets, {
               }).text(search_results[i]['content'])
             )
           );
-          console.log("search_results: ");
-          console.log(search_results[i]['date']); 
+          //console.log("search_results: ");
+          //console.log(search_results[i]['date']); 
         }
         $('div#_searchContainer').fadeIn(2000);
         
@@ -119,6 +139,9 @@ $.extend(widgets, {
       "inputs" : []
     },
     parseQueryAndSubmit : function() {
+
+      widgets.search.table.drawSpinner();
+
       var jquery_data = "action=search&";
       var split_queryInput = $("input#_queryInput")[0].value.split(/", /);
       var i = 0;

@@ -1,5 +1,10 @@
 #include <stumpd/dotcom/dotcom.hpp>
+#include <b64/cencode.h>
+#include <b64/encode.h>
+#include <b64/cdecode.h>
+#include <b64/decode.h>
 #include <stumpd/v8/v8.hpp>
+
 
 //extern stumpd::v8_pool *js_worker_pool;
 extern stumpd::v8_pool* js_worker_pool;
@@ -7,6 +12,8 @@ extern stumpd::v8_pool* js_worker_pool;
 int
 stumpd::dotcom::api_testScript(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request)
 {
+
+  base64::decoder b64d;
 
   if(strlen(Request.POST("script")) == 0)
   {
@@ -25,7 +32,8 @@ stumpd::dotcom::api_testScript(Lacewing::Webserver &Webserver, Lacewing::Webserv
 
   //fprintf(stdout, "js_worker->test() returned: %d with the following script\n%s", js_worker->test(json_return.c_str()), json_return.c_str());
   //if(js_worker->test(json_return.c_str()) == 0)
-  if(js_worker->test(Request.POST("script")) == 0)
+  //fprintf(stdout, "after decoding: %s\n", b64d.decode(Request.POST("script")).c_str());
+  if(js_worker->test(b64d.decode(std::string(Request.POST("script"))).c_str()) == 0)
   {
     Request.Status(200, "OK"); 
     Request.Write(Request.POST("script"), strlen(Request.POST("script")));

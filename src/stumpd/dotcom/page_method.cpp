@@ -13,8 +13,6 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
 
   fprintf(stdout, "Just got a request for \"%s\" : length %ld\n", Request.URL(), strlen(Request.URL()));
 
-  fprintf(stdout, "Cookie header is %s\n", Request.Header("cookie"));
-
   if(strlen(Request.URL()) <= 1)// || (strlen(Request.URL()) == 1 && strncmp(Request.URL(), "/", 1) == 0))
   {  
     fprintf(stdout, "Sending index\n");

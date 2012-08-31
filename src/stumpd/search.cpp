@@ -428,3 +428,29 @@ stumpd::search::json_getTriggers()
   json_string.append("]");
   return json_string;
 }
+
+int
+stumpd::search::addFilter(std::string alias, std::string filter)
+{
+  #define DB_TYPE "mysql"
+  #define DB_NAME "stump"
+  #define SEARCH_LIMIT "1000"
+
+  std::vector <std::vector <std::string> > results;
+
+  if(strcmp(DB_TYPE, "mysql") == 0)
+  {
+    results = 
+      mysql_conn->query(
+        std::string("INSERT INTO stump.filters(alias,filter) VALUES ('")
+          .append(alias)
+          .append("', '")
+          .append(filter)
+          .append("');").c_str());
+    fprintf(stdout, "Results size: %ld\n", results.size());
+    return 0;
+  } else {
+    return 1;
+  }
+
+}

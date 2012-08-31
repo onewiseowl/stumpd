@@ -91,6 +91,9 @@ namespace stumpd {
       int
       api_updateFilter(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
 
+      int
+      api_addFilter(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
+
       void
       api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
       

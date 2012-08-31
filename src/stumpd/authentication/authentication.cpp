@@ -25,11 +25,11 @@ stumpd::authentication::ask(Lacewing::Webserver::Request& Request)
         //session = NULL;
 
         std::vector<std::string> basic_auth_split;        
-
+        base64::decoder b64d;
         // Decode and split the username:password
         basic_auth_split = 
         stumpd::utilities::split(
-          stumpd::utilities::base64::decode(split_authorization_header[1]).c_str(),
+          b64d.decode(split_authorization_header[1]).c_str(),
           ':');
 
         //std::cout << "Basic auth set as : " << stumpd::utilities::base64::decode(split_authorization_header[1]) << std::endl;
@@ -103,6 +103,8 @@ stumpd::authentication::ask_userpass(Lacewing::Webserver::Request &Request, cons
 
   memset(line, 0, 1025);
 
+  base64::decoder b64d;
+
   fp = fopen(STUMPD_AUTHENTICATION_HTPASSWD_FILE, "r");
   if(fp)
   {
@@ -111,7 +113,7 @@ stumpd::authentication::ask_userpass(Lacewing::Webserver::Request &Request, cons
 
       split_userpass =
         stumpd::utilities::split( 
-          stumpd::utilities::base64::decode(line).c_str(),
+          b64d.decode(line).c_str(),
           ':');
 
       if(strncmp(username, split_userpass[0].c_str(), strlen(username)) == 0)

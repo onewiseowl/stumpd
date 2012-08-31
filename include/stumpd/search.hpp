@@ -44,6 +44,9 @@ namespace stumpd {
       std::string
       json_getTriggers();
 
+      int
+      addFilter(std::string alias, std::string filter);
+
       std::vector <std::vector <std::string> >
       getTriggers();
 

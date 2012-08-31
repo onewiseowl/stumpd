@@ -39,10 +39,10 @@ var include = function(script_source) {
         try {
           eval(data);
         } catch (e) {
-          //if (e instanceof SyntaxError) {
-          //  alert(e.message);
-          //}
-          alert(e);
+          if (e instanceof SyntaxError) {
+            alert(e.message);
+          }
+          //alert(e);
         }
       }
     })

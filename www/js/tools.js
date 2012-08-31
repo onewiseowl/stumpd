@@ -4,35 +4,69 @@ $.extend(widgets, {
     filters : ({
       list : Array(),
       update : function(id) {
-        widgets.tools.interpreter.submit(editAreaLoader.getValue('_filterList_table_edit_textarea'));
-        $.ajax({
-        url : "/api",
-        type : "POST",
-        async : false,
-        timeout: 2000,
-        data : {
-          action : 'updateFilter',
-          alias : widgets.tools.filters.list[id][1],
-          filter : $.base64.encode(editAreaLoader.getValue('_filterList_table_edit_textarea')),
-          id : widgets.tools.filters.list[id][0]
-        },
-        complete : function(jqXHR, textStatus)
+        if(typeof widgets.tools.interpreter.submit($.base64.encode(editAreaLoader.getValue('_filterList_table_edit_textarea'))) != 'undefined')
         {
-          if(textStatus == "timeout")
-          {
-            alert("Timeout!");
-          }
-        },
-        success : function(data, textStatus, jqXHR) {
-          try {
-            widgets.tools.filters.getExisting();
-          } catch(e) {
-            alert(e);
-          }
-        }
-      });        
+          $.ajax({
+            url : "/api",
+            type : "POST",
+            async : false,
+            timeout: 2000,
+            data : {
+              action : 'updateFilter',
+              alias : $.base64.encode(widgets.tools.filters.list[id][1]),
+              filter : $.base64.encode(editAreaLoader.getValue('_filterList_table_edit_textarea')),
+              id : widgets.tools.filters.list[id][0]
+            },
+            complete : function(jqXHR, textStatus)
+            {
+              if(textStatus == "timeout")
+              {
+                alert("Timeout!");
+              }
+            },
+            success : function(data, textStatus, jqXHR) {
+              try {
+                widgets.tools.filters.getExisting();
+              } catch(e) {
+                alert(e);
+              }
+            }
+          });
+        }        
       },
       add : ({
+        submit : function() {
+          if(typeof widgets.tools.interpreter.submit($.base64.encode(editAreaLoader.getValue('_filterList_table_edit_textarea'))) != 'undefined')
+          {
+            $.ajax({
+              url : "/api",
+              type : "POST",
+              async : false,
+              timeout: 2000,
+              data : {
+                action : 'addFilter',
+                alias : $.base64.encode($('input#_addFilter_alias_input').val()),
+                filter : $.base64.encode(editAreaLoader.getValue('_filterList_table_edit_textarea')),
+              },
+              complete : function(jqXHR, textStatus)
+              {
+                if(textStatus == "timeout")
+                {
+                  alert("Timeout!");
+                }
+              },
+              success : function(data, textStatus, jqXHR) {
+                try {
+                  widgets.tools.filters.getExisting();
+                } catch(e) {
+                  alert(e);
+                }
+              }
+            });
+          } else {
+            alert("Script evaled badly...did not return 0");
+          }
+        },
         draw : function() {
           try {
             if($('div#_filterList_table_edit_div').length > 0)
@@ -45,6 +79,12 @@ $.extend(widgets, {
                 name: '_filterList_table_edit_div',
                 class: '_filterList_table_edit_div'
               }).append(
+                $('<input></input>').attr({
+                  type : 'text',
+                  id : '_addFilter_alias_input',
+                  name : '_addFilter_alias_input',
+                  class : '_addFilter_alias_input'
+                }),
                 $('<textarea></textarea>').attr({
                   id: '_filterList_table_edit_textarea',
                   name: '_filterList_table_edit_textarea',
@@ -75,7 +115,7 @@ $.extend(widgets, {
               min_width: 965,
               min_height: 300,
               toolbar: 'undo, redo, search, save',
-              save_callback: 'widgets.tools.filters.add()',
+              save_callback: 'widgets.tools.filters.add.submit();',
               syntax: 'js'
             });
             //editAreaLoader.show('_filterList_table_edit_textarea');
@@ -395,7 +435,7 @@ $.extend(widgets, {
     }),
     interpreter : ({
       submit : function(data) {
-        $.ajax({
+        return $.ajax({
         url : "/api",
         type : "POST",
         async : true,
@@ -406,9 +446,11 @@ $.extend(widgets, {
         },
         success : function(data, textStatus, jqXHR) {
           alert('Code successfully interpreted');
+          return 0;
         },
         error : function(jqXHR, textStatus, errorThrown) {
           alert('Code interpretation error: ' + errorThrown + " " + textStatus);
+          return 1;
         }
       });
       },
@@ -434,7 +476,7 @@ $.extend(widgets, {
               id: '_jsInterpreter_submit',
               name: '_jsInterpreter_submit',
               class: '_jsInterpreter_submit',
-              href : 'Javascript: widgets.tools.interpreter.submit(editAreaLoader.getValue(\'_jsInterpreter_textarea\'))'
+              href : 'Javascript: widgets.tools.interpreter.submit($.base64.encode(editAreaLoader.getValue(\'_jsInterpreter_textarea\')))'
             }).text('Check syntax')
           )
         );

@@ -27,6 +27,15 @@ stumpd::dotcom::api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request
     this->api_updateFilter(Webserver, Request);
     return;
   } else
+  if(strcmp(Request.POST("action"), "addFilter") == 0)
+  {
+    if(this->api_addFilter(Webserver, Request) == 0)
+      return;
+    else
+      Request.Status(500, "Internal Server Error");
+
+    return;
+  } else
   if(strcmp(Request.POST("action"), "getInputs") == 0)
   {
     //Request.Write("[{\"/var/www/verifi/logs/stuff/stuff.log\", \"/var/log/auth.log\"}]");
