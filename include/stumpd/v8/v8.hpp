@@ -13,10 +13,7 @@
 #include <lwsync/critical_resource.hpp>
 #include <lwsync/monitor.hpp>
 
-#include <b64/cencode.h>
-#include <b64/encode.h>
-#include <b64/cdecode.h>
-#include <b64/decode.h>
+#include <b64/base64.hpp>
 
 using namespace v8;
 

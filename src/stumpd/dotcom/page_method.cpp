@@ -113,6 +113,7 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
         }else {
           Request.Status(401, "Authentication Required");
         }
+        //delete session;
       }
     } else
     {

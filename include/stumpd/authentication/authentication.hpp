@@ -22,10 +22,7 @@
 //#include <stumpd/authentication/authentication_sources.hpp>
 #include <stumpd/authentication/htpasswd_auth_source.hpp>
 
-#include <b64/cencode.h>
-#include <b64/encode.h>
-#include <b64/cdecode.h>
-#include <b64/decode.h>
+#include <b64/base64.hpp>
 
 #define HTPASSWD_AUTH 1
 #define LDAP_AUTH 2

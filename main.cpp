@@ -29,16 +29,15 @@ stumpd::v8_pool *js_worker_pool = new stumpd::v8_pool(50);
 #include <stumpd/search.hpp>
 #include <stumpd/sighandler.hpp>
 
-#include <b64/cencode.h>
-#include <b64/encode.h>
-#include <b64/cdecode.h>
-#include <b64/decode.h>
+#include <b64/base64.hpp>
 
 #define gettid() syscall(__NR_gettid) 
 
 int
 main( int argc, char **argv )
 {
+
+  std::cout << "returned: " << base64_encode("Sep  7 20:16:30 ganja sshd[30657]: pam_unix(sshd:auth): check pass; user unknown") << std::endl;
 
   signal(SIGTERM,stumpd::sighandler);
   signal(SIGQUIT,stumpd::sighandler);

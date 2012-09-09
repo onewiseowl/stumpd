@@ -23,7 +23,7 @@ stumpd::htpasswd_auth_source(authentication* auth, const char* username, const c
 
       split_userpass =
         stumpd::utilities::split( 
-          stumpd::utilities::base64::decode(line).c_str(),
+          base64_decode(line).c_str(),
           ':');
 
       if(strncmp(username, split_userpass[0].c_str(), strlen(username)) == 0)

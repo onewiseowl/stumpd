@@ -9,6 +9,8 @@
 #include <string>
 #include <time.h>
 
+#include <b64/base64.hpp>
+
 #include <stumpd/database/mysql.hpp>
 
 namespace stumpd {

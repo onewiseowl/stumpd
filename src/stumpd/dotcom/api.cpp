@@ -7,6 +7,10 @@ stumpd::dotcom::api(Lacewing::Webserver &Webserver, Lacewing::Webserver::Request
   //fprintf(stdout, "Executing API function...\n");
 
   // This is just a test response
+  if(strcmp(Request.POST("action"), "ping") == 0)
+  {
+    return;
+  } else
   if(strcmp(Request.POST("action"), "testScript") == 0)
   {
     this->api_testScript(Webserver, Request);

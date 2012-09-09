@@ -7,9 +7,7 @@ stumpd::dotcom::api_addFilter(Lacewing::Webserver &Webserver, Lacewing::Webserve
 
   stumpd::search search;
 
-  base64::decoder b64d;
-
-  return search.addFilter(b64d.decode(Request.POST("alias")), Request.POST("filter"));
+  return search.addFilter(base64_decode(Request.POST("alias")), Request.POST("filter"));
 
   //fprintf(stdout, "search.json_query returned :)\n");
 

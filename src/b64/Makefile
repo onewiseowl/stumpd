@@ -11,18 +11,9 @@ COMPILE = $(CC) $(CFLAGS) -c
 OBJFILES := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 
 
-all : cencode.o cdecode.o
+base64.o : 
 
-
-
-cencode : 
-
-	$(COMPILE) cencode.cpp
-
-
-cdecode : 
-
-	$(COMPILE) decode.cpp
+	$(COMPILE) base64.cpp
 
 clean :
 

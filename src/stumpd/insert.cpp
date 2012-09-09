@@ -8,6 +8,8 @@
 
 #include <stumpd/insert.hpp>
 
+#include <b64/base64.hpp>
+
 #define DB_TYPE "mysql"
 
 extern stumpd::database::mysql *mysql_conn;
@@ -31,6 +33,8 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
 {
   size_t document_count;
   document_count = 0;
+
+  std::string content;
 
   bool start;
   start = 1;
@@ -95,6 +99,8 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
           start = !start;
       }
 
+        std::cout << "Inserting data from date: " << data[i][0] << std::endl;
+
         insert_query
           .append("(FROM_UNIXTIME(")
           .append(data[i][0])
@@ -103,10 +109,12 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
           .append("\",\"")
           .append(data[i][2])
           .append("\",\"")
-          .append(data[i][3])
+          .append(base64_decode(data[i][3]))
           .append("\")");
-        //if(i<data.size()-1&&start == 0)
-        //  insert_query.append(",");
+          
+          content.clear();
+          if(i<data.size()-1&&start == 0)
+            insert_query.append(",");
 
     }
     fprintf(stdout, "Insert query is: %s\n", insert_query.c_str());

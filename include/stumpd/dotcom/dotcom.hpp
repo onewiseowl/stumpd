@@ -45,6 +45,8 @@ namespace stumpd {
   void dotcom_onUploadDone (Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request,
     Lacewing::Webserver::Upload &Upload);
 
+  void dotcom_onDisconnect (Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request);
+
   class dotcom {
     protected:
       Lacewing::Filter dotcom_httpd_filter;
@@ -130,6 +132,7 @@ namespace stumpd {
         this->dotcom_webserver->onUploadPost(dotcom_onUploadPost);
         this->dotcom_webserver->onUploadStart(dotcom_onUploadStart);
         this->dotcom_webserver->onUploadDone(dotcom_onUploadDone);
+        this->dotcom_webserver->onDisconnect(dotcom_onDisconnect);
 
         this->dotcom_webserver->Host(this->dotcom_httpd_filter);
 

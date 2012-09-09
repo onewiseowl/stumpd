@@ -88,7 +88,7 @@ $.extend(widgets, {
               }).text(search_results[i]['input']),
               $('<td></td>').attr({
                 class : "sortable"
-              }).text(search_results[i]['content'])
+              }).text($.base64.decode(search_results[i]['content']))
             )
           );
           //console.log("search_results: ");

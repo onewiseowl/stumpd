@@ -46,7 +46,7 @@ stumpd::execute_filters(const char *data)
 
   js_worker = js_worker_pool->grab();
 
-  base64::decoder b64d;
+  fprintf(stdout, "Before filter: %s\n", result.c_str());
 
   for(i=0;i<stumpd::filters.size();i++)
   {
@@ -58,7 +58,7 @@ stumpd::execute_filters(const char *data)
       .assign("var data = ")
       .append(result.c_str())
       .append(";\nvar filterFunction = ")
-      .append(b64d.decode(stumpd::filters[i][1]))
+      .append(base64_decode(stumpd::filters[i][1]))
       .append("\nvar filteredOutput = filterFunction(data);\n")
       .append("JSON.stringify(filteredOutput);");
    

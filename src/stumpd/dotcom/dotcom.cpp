@@ -8,7 +8,9 @@ char *stumpd::dotcom::document_root;
 void
 stumpd::dotcom_httpd_thread_callback(void *input)
 {
+  fprintf(stdout, "Before event loop...\n");
   ((dotcom*)input)->dotcom_eventpump.StartEventLoop();
+  fprintf(stdout, "After event loop...\n");
 }
 
 void
@@ -91,4 +93,10 @@ stumpd::dotcom_onUploadDone (Lacewing::Webserver &Webserver, Lacewing::Webserver
   int i;
   i = 0;
   i++;
+}
+
+void
+stumpd::dotcom_onDisconnect (Lacewing::Webserver &Webserver, Lacewing::Webserver::Request &Request)
+{
+  Request.Finish();
 }

@@ -198,7 +198,7 @@ stumpd::search::json_query(time_t from_date, time_t to_date, std::vector <std::s
         .append("\",input:\"")
         .append(search_return[a][3])
         .append("\",content:\"")
-        .append(search_return[a][4])
+        .append(base64_encode(search_return[a][4]))
         .append("\"}");
 
       if(a < search_return.size() - 1 && search_return.size() > 1)

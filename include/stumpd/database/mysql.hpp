@@ -60,7 +60,7 @@ namespace database
                     user_.empty() ? stumpd::config::database::db_user.c_str() : 0,
                     password_.empty() ? stumpd::config::database::db_pass.c_str() : "");
           }
-
+        
         void destroy(mysqlpp::Connection* cp)
         {
             // Our superclass can't know how we created the Connection, so
@@ -90,7 +90,8 @@ namespace database
     //class stumpd::cache cache;
     template <typename T>
     std::vector <std::vector <std::string> > query(T query_string);
-
+    static void
+    escape_string(std::string &string);
   };
 
   template<typename T>
