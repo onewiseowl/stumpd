@@ -447,7 +447,6 @@ stumpd::search::addFilter(std::string alias, std::string filter)
           .append("', '")
           .append(filter)
           .append("');").c_str());
-    fprintf(stdout, "Results size: %ld\n", results.size());
     return 0;
   } else {
     return 1;

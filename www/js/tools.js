@@ -193,7 +193,14 @@ $.extend(widgets, {
         },
         success : function(data, textStatus, jqXHR) {
           try {
-            widgets.tools.filters.list = eval(data);
+            temp_data = eval(data);
+            for(i in temp_data)
+            {
+              temp_data[i][1] = $.base64.decode(temp_data[i][1]);
+            }
+            widgets.tools.filters.list = temp_data
+            delete temp_data;
+          
           } catch(e) {
             alert(e);
           }
@@ -355,7 +362,13 @@ $.extend(widgets, {
         },
         success : function(data, textStatus, jqXHR) {
           try {
-            widgets.tools.triggers.list = eval(data);
+            temp_data = eval(data);
+            for(i in temp_data)
+            {
+              temp_data[i][1] = $.base64.decode(temp_data[i][1]);
+            }
+            widgets.tools.triggers.list = temp_data;
+            delete temp_data;
           } catch(e) {
             alert(e);
           }

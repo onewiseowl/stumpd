@@ -31,10 +31,11 @@ sort_dates( std::vector <std::string>i, std::vector<std::string> j)
 size_t
 stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
 {
+
+  fprintf(stdout, "insert_data size %ld\n", data.size());
+
   size_t document_count;
   document_count = 0;
-
-  std::string content;
 
   bool start;
   start = 1;
@@ -99,25 +100,23 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
           start = !start;
       }
 
-        std::cout << "Inserting data from date: " << data[i][0] << std::endl;
+        //std::cout << "Inserting data from date: " << data[i][0] << std::endl;
 
         insert_query
           .append("(FROM_UNIXTIME(")
           .append(data[i][0])
-          .append("),\"")
+          .append("),'")
           .append(data[i][1])
-          .append("\",\"")
+          .append("','")
           .append(data[i][2])
-          .append("\",\"")
-          .append(base64_decode(data[i][3]))
-          .append("\")");
+          .append("','")
+          .append(data[i][3])
+          .append("')");
           
-          content.clear();
           if(i<data.size()-1&&start == 0)
             insert_query.append(",");
 
     }
-    fprintf(stdout, "Insert query is: %s\n", insert_query.c_str());
     results = mysql_conn->query(insert_query.c_str());
     free(ymd);
     free(ymd_old);
@@ -165,7 +164,7 @@ stumpd::insert::insert_json_data(std::string json_data)
       document.push_back(root[document_count]["date"].asString());
       document.push_back(root[document_count]["host"].asString());
       document.push_back(root[document_count]["input"].asString());
-      document.push_back(root[document_count]["content"].asString());
+      document.push_back(base64_decode(root[document_count]["content"].asString()));
       data.push_back(document);
      document.clear();
     }

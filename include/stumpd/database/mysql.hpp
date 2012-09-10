@@ -117,6 +117,7 @@ namespace database
           results = query.store();
         } catch(mysqlpp::Exception &e) {
           fprintf(stdout, "MySQL++ Exception: %s\n", e.what());
+          std::cout << "Query: " << query_string << std::endl;
           return data_buf;
         }
 

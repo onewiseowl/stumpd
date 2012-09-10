@@ -175,7 +175,6 @@ stumpd::v8_pool::v8_worker::execute(const char *script_string)
      // Dispose the persistent context.
     context.Dispose();
     lock.StopPreemption();
-    fprintf(stdout, "Returning: %s\n", *ascii);
     return std::string(*ascii);
   } else {
   //  ReportException(&trycatch);

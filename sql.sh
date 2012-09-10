@@ -31,14 +31,14 @@ CREATE TABLE IF NOT EXISTS `documents_'$YEAR'`.`'$(date -d "01/01/$YEAR $i days"
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `date` datetime DEFAULT NULL,
   `host` varchar(64) DEFAULT NULL,
-  `source` varchar(256) DEFAULT NULL,
+  `input` varchar(256) DEFAULT NULL,
   `content` text,
   KEY `id` (`id`),
   KEY `date_index` (`date`),
   KEY `host_index` (`host`(10)),
-  KEY `source_index` (`source`(40)),
+  KEY `input_index` (`input`(40)),
   FULLTEXT KEY `content_index` (`content`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;'
 
   ((i++))
 done

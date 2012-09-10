@@ -162,9 +162,12 @@ stumpd::authentication::ask_cookie(Lacewing::Webserver::Request& Request)
         return this->sessions.access()->find(Request.Cookie("session"))->second;
       } else {
         fprintf(stdout, "Cookie is expired for session: %s\n", this->sessions.access()->find(Request.Cookie("session"))->second->get_session_id().c_str());
-        delete(this->sessions.access()->find(Request.Cookie("session"))->second);
-        this->sessions.access()->find(Request.Cookie("session"))->second = NULL;
-        this->sessions.access()->erase(Request.Cookie("session"));
+        if(this->sessions.access()->count(Request.Cookie("session")) > 0)
+        {
+          delete(this->sessions.access()->find(Request.Cookie("session"))->second);
+          this->sessions.access()->find(Request.Cookie("session"))->second = NULL;
+          this->sessions.access()->erase(Request.Cookie("session"));
+        }
         return NULL;
       } 
     } else {

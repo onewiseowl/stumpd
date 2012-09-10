@@ -10,8 +10,6 @@ stumpd::dotcom::api_insert(Lacewing::Webserver &Webserver, Lacewing::Webserver::
 
   std::string results(stumpd::execute_filters(Request.POST("documents")));
 
-  fprintf(stdout, "results are: %s\n", results.c_str());
-
   //stumpd::execute_triggers(Request.POST("documents"));
 
   if(stumpd::insert::insert_json_data(results) > 0)

@@ -40,33 +40,34 @@ stumpd::execute_filters(const char *data)
   std::string result(data);
   std::string new_result;
 
+
   //myReplace(result, "\"", "\\\"");
 
   stumpd::v8_pool::v8_worker *js_worker;
 
   js_worker = js_worker_pool->grab();
 
-  fprintf(stdout, "Before filter: %s\n", result.c_str());
-
   for(i=0;i<stumpd::filters.size();i++)
   {
 
-    //fprintf(stdout, "Executing filter #%d\n", i);
     new_result.clear();
 
     script
       .assign("var data = ")
       .append(result.c_str())
-      .append(";\nvar filterFunction = ")
+      .append(";\n")
+      .append(stumpd::base64js)
+      .append("\nvar filterFunction = ")
       .append(base64_decode(stumpd::filters[i][1]))
       .append("\nvar filteredOutput = filterFunction(data);\n")
       .append("JSON.stringify(filteredOutput);");
-   
 
+    fprintf(stdout, "Executing filter: %s\n", script.c_str());
+  
     new_result.assign(js_worker->execute(script.c_str()));
-    fprintf(stdout, "Filter returned JSON: %s\n", new_result.c_str());
     if(new_result.length() > 0)
       result.assign(new_result);  
+
 
     //fprintf(stdout, "After execution of script...\n");
   }
