@@ -33,7 +33,7 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
 {
 
   fprintf(stdout, "insert_data size %ld\n", data.size());
-
+  FILE *fp;
   size_t document_count;
   document_count = 0;
 
@@ -52,7 +52,7 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
   if(strcmp(DB_TYPE, "mysql") == 0)
   {
 
-  std::string insert_query;
+  std::string insert_query("START TRANSACTION;");
   std::vector <std::vector < std::string > > results;
 
     if(data.size() > 0)
@@ -74,12 +74,13 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
         if(strlen(ymd_old) != 0)
         {
           //fprintf(stdout, "ymd_old length is %ld\n", strlen(ymd_old));
+          insert_query.erase(insert_query.length() - 1);
           insert_query.append(";");
         } else {
           if(i<data.size()-1&&start == 0)
             insert_query.append(",");
         }
-        //fprintf(stdout, "Starting new insert query, capping off the last one\n");
+        fprintf(stdout, "Starting new insert query, capping off the last one\n");
         start = 1;
       }
       
@@ -88,7 +89,7 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
       {
 
         strncpy(ymd_old, ymd, 10);
-
+        //insert_query.clear();
         insert_query
           .append("INSERT INTO `documents_")
           .append(
@@ -96,11 +97,9 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
               .substr(0, 4))
           .append("`.`")
           .append(ymd)
-          .append("`(date, host, input, content) VALUES ");
+          .append("` (date, host, input, content) VALUES ");
           start = !start;
       }
-
-        //std::cout << "Inserting data from date: " << data[i][0] << std::endl;
 
         insert_query
           .append("(FROM_UNIXTIME(")
@@ -117,6 +116,15 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
             insert_query.append(",");
 
     }
+
+    insert_query
+      .append(";COMMIT;");
+
+    fp = fopen("/tmp/insert.log", "w+");
+    fprintf(fp, "%s", insert_query.c_str());
+    fclose(fp);
+
+
     results = mysql_conn->query(insert_query.c_str());
     free(ymd);
     free(ymd_old);
@@ -124,7 +132,6 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
       return 1;
     else
       return 0;
-
   } else
   if(strcmp(DB_TYPE, "clucene") == 0)
   {

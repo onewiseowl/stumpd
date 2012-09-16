@@ -54,11 +54,15 @@ namespace database
           mysqlpp::Connection* create()
           {
               //std::cout.put('C'); std::cout.flush(); // indicate connection creation
-              return new mysqlpp::Connection(
+              mysqlpp::Connection *tmp_conn = new mysqlpp::Connection(
                     db_.empty() ? stumpd::config::database::db_name.c_str() : 0,
                     server_.empty() ? stumpd::config::database::db_host.c_str() : 0,
                     user_.empty() ? stumpd::config::database::db_user.c_str() : 0,
                     password_.empty() ? stumpd::config::database::db_pass.c_str() : "");
+              tmp_conn->set_option(new mysqlpp::MultiStatementsOption(true));
+ 
+              return tmp_conn;
+
           }
         
         void destroy(mysqlpp::Connection* cp)
@@ -107,41 +111,48 @@ namespace database
       std::cout << "We found cached dater..." << data_buf.size() << std::endl;
       return data_buf;
     } else {
-      mysqlpp::Connection *db_con = this->pool.grab();
-      //std::cout << "Connection db_con addr: " << &db_con << std::endl;
-      mysqlpp::StoreQueryResult results;
-      if(db_con->connected() == true)
-      {
-        try {
-          mysqlpp::Query query = db_con->query(query_string);
-          results = query.store();
-        } catch(mysqlpp::Exception &e) {
-          fprintf(stdout, "MySQL++ Exception: %s\n", e.what());
-          std::cout << "Query: " << query_string << std::endl;
+      try {
+        mysqlpp::Connection *db_con = this->pool.grab();
+        mysqlpp::StoreQueryResult results;
+        if(db_con->connected() == true)
+        {
+          try {
+            mysqlpp::Query query = db_con->query(query_string);
+            results = query.store();
+          } catch(mysqlpp::Exception &e) {
+            fprintf(stdout, "MySQL++ Exception: %s\n", e.what());
+            std::cout << "Query: " << query_string << std::endl;
+            return data_buf;
+          }
+          fprintf(stdout, "Yay, execution completed and returned %ld rows\n", results.num_rows());
+          //sleep(2);
+  
+          //this->pool[db_fd_i].unlock();
+          unsigned int i;
+          unsigned int r;
+          unsigned int c;
+          unsigned int ci;
+          r = results.num_rows();
+          data_buf.resize(r);
+          if(r>0)
+            c = results[0].size();
+          for(i=0;i<r;i++)
+          {
+            for(ci=0;ci<c;ci++)
+            {
+              data_buf[i].push_back((std::string)results[i][ci]);
+            }
+          }
+          this->pool.release(db_con);
+          return data_buf;
+        } else {
+          std::cerr << "Failed to establish db descriptor lock, punting query" << std::endl;
+          this->pool.release(db_con);
           return data_buf;
         }
-
-        //this->pool[db_fd_i].unlock();
-        unsigned int i;
-        unsigned int r;
-        unsigned int c;
-        unsigned int ci;
-        r = results.num_rows();
-        data_buf.resize(r);
-        if(r>0)
-          c = results[0].size();
-        for(i=0;i<r;i++)
-        {
-          for(ci=0;ci<c;ci++)
-          {
-            data_buf[i].push_back((std::string)results[i][ci]);
-          }
-        }
-        this->pool.release(db_con);
-        return data_buf;
-      } else {
-        std::cerr << "Failed to establish db descriptor lock, punting query" << std::endl;
-        this->pool.release(db_con);
+      } catch(mysqlpp::Exception &e) {
+        fprintf(stdout, "MySQL++ Exception: %s\n", e.what());
+        std::cout << "Query: " << query_string << std::endl;
         return data_buf;
       }
     }

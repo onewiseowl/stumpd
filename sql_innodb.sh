@@ -25,6 +25,7 @@ echo "CREATE DATABASE IF NOT EXISTS documents_$YEAR;"
 while [ $i -le 364 ]
 do
 echo '
+DROP TABLE IF EXISTS `documents_'$YEAR'`.`'$(date -d "01/01/$YEAR $i days" +%Y%m%d)'`;
 CREATE TABLE `documents_'$YEAR'`.`'$(date -d "01/01/$YEAR $i days" +%Y%m%d)'` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `date` datetime DEFAULT NULL,

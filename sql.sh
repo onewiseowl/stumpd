@@ -27,6 +27,7 @@ while [ $i -le 364 ]
 do
 
 echo '
+DROP TABLE IF EXISTS `documents_'$YEAR'`.`'$(date -d "01/01/$YEAR $i days" +%Y%m%d)'`;
 CREATE TABLE IF NOT EXISTS `documents_'$YEAR'`.`'$(date -d "01/01/$YEAR $i days" +%Y%m%d)'` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `date` datetime DEFAULT NULL,
@@ -38,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `documents_'$YEAR'`.`'$(date -d "01/01/$YEAR $i days"
   KEY `host_index` (`host`(10)),
   KEY `input_index` (`input`(40)),
   FULLTEXT KEY `content_index` (`content`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;'
 
   ((i++))
 done

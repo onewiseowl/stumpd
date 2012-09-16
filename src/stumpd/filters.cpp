@@ -41,7 +41,13 @@ stumpd::execute_filters(const char *data)
   std::string new_result;
 
 
+  FILE *fp;
+
   //myReplace(result, "\"", "\\\"");
+
+  fp = fopen("/tmp/stumpd.json", "w+");
+  fprintf(fp, "%s", result.c_str());
+  fclose(fp);
 
   stumpd::v8_pool::v8_worker *js_worker;
 
@@ -62,14 +68,15 @@ stumpd::execute_filters(const char *data)
       .append("\nvar filteredOutput = filterFunction(data);\n")
       .append("JSON.stringify(filteredOutput);");
 
-    fprintf(stdout, "Executing filter: %s\n", script.c_str());
+    //fprintf(stdout, "Executing filter: %s\n", script.c_str());
   
     new_result.assign(js_worker->execute(script.c_str()));
     if(new_result.length() > 0)
       result.assign(new_result);  
 
-
-    //fprintf(stdout, "After execution of script...\n");
+    fp = fopen("/tmp/stumpd.json.out", "w+");
+    fprintf(fp, "%s", result.c_str());
+    fclose(fp);
   }
   js_worker->release();
   return result;

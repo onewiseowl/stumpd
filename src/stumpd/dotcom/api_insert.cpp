@@ -7,11 +7,14 @@ stumpd::dotcom::api_insert(Lacewing::Webserver &Webserver, Lacewing::Webserver::
 {
   //fprintf(stdout, "Inserting data: %s\n", Request.POST("documents"));
   // first we must run filters and triggers on json data
+  //fprintf(stdout, "RAW JSON to insert is: %s\n\n\n", Request.POST("documents"));
 
   std::string results(stumpd::execute_filters(Request.POST("documents")));
 
   //stumpd::execute_triggers(Request.POST("documents"));
 
+  //if(stumpd::insert::insert_json_data(results) > 0)
+  fprintf(stdout, "After filters are executed, we have a JSON result of %ld bytes\n", results.length());
   if(stumpd::insert::insert_json_data(results) > 0)
   {
     Request.Status(200, "OK");
