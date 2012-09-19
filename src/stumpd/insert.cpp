@@ -135,10 +135,15 @@ stumpd::insert::insert_data(std::vector <std::vector <std::string> > data)
   } else
   if(strcmp(DB_TYPE, "clucene") == 0)
   {
+    free(ymd);
+    free(ymd_old);
     fprintf(stderr, "CLucene DB_TYPE is not yet supported\n");
     return 0;
   }
 
+
+  free(ymd);
+  free(ymd_old);
 
   return document_count;
 }

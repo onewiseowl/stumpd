@@ -273,6 +273,8 @@ stumpd::authentication::load_sessions()
       "Could not open session dir %s: %s\n",
       SESSION_PERSIST_PATH,
       strerror(errno));
+    free(file_buf);
+    free(session_buf);
     return 1;
   }
 }
