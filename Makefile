@@ -6,12 +6,15 @@ MAKE_JOBS_SAFE=	yes
 
 CC = g++
 
-CFLAGS = -g -O0 -Wall -I/usr/include/mysql -I/usr/include/mysql++ -Iinclude -DLWSYNC_HAS_NO_BOOST -DBUFFERSIZE=$(BUFFERSIZE)
+CFLAGS = -O0 -Wall -I/usr/include/mysql -I/usr/include/mysql++ -Iinclude -DLWSYNC_HAS_NO_BOOST -DBUFFERSIZE=$(BUFFERSIZE)
 LDFLAGS = -lv8 -llacewing -lmysqlclient -lmysqlpp
-
 COMPILE = $(CC) $(CFLAGS) -c
 
 OBJFILES := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+
+debug: b64 jsonpp stumpd
+
+	$(CC) -o stumpd -g $(CFLAGS) main.cpp src/b64/*.o src/jsonpp/*.o src/stumpd/*.o $(LDFLAGS)
 
 
 all: b64 jsonpp stumpd
