@@ -17,7 +17,7 @@ namespace stumpd {
       Lacewing::EventPump udp_server_eventpump;
       Lacewing::Thread *udp_server_thread;
       Lacewing::UDP *server;
-      friend void stumpd::dotcom_httpd_thread_callback(void *input);
+      //friend void stumpd::dotcom_httpd_thread_callback(void *input);
       friend void stumpd::udp_onReceive (Lacewing::UDP &UDP, Lacewing::Address &Address, char * Data, size_t Size);
       friend void stumpd::udp_server_thread_callback(void *input);
 

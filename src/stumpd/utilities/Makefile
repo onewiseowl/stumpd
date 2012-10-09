@@ -1,6 +1,6 @@
 CC = g++
 
-CFLAGS = -g -c -O -Wall -I../../../lib/
+CFLAGS = -g -pipe -c -O -Wall -I../../../lib/
 
 COMPILE = $(CC) $(CFLAGS) -c
 

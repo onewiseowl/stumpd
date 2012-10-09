@@ -4,7 +4,7 @@ BUFFERSIZE = 16777216
 
 CC = g++
 
-CFLAGS = -g -O0 -Wall -I../../include -DBUFFERSIZE=$(BUFFERSIZE)
+CFLAGS = -g -pipe -O0 -Wall -I../../include -DBUFFERSIZE=$(BUFFERSIZE)
 
 COMPILE = $(CC) $(CFLAGS) -c
 

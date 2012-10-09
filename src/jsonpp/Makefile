@@ -1,6 +1,6 @@
 CC = g++
 
-CFLAGS = -g -c -O0 -Wall -I../../include/
+CFLAGS = -g -pipe -c -O0 -Wall -I../../include/
 
 COMPILE = $(CC) $(CFLAGS) -c
 

@@ -6,9 +6,9 @@ MAKE_JOBS_SAFE=	yes
 
 CC = g++
 
-CFLAGS = -O0 -Wall -I/usr/include/mysql -I/usr/include/mysql++ -Iinclude -DLWSYNC_HAS_NO_BOOST -DBUFFERSIZE=$(BUFFERSIZE)
+CFLAGS = -O0 -pipe -Wall -I/usr/include/mysql -I/usr/include/mysql++ -Iinclude -DLWSYNC_HAS_NO_BOOST -DBUFFERSIZE=$(BUFFERSIZE)
 LDFLAGS = -lv8 -llacewing -lmysqlclient -lmysqlpp
-COMPILE = $(CC) $(CFLAGS) -c
+COMPILE = $(CC) $(CFLAGS) -c -pipe
 
 OBJFILES := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 
