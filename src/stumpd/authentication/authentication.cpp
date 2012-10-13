@@ -161,7 +161,7 @@ stumpd::authentication::ask_cookie(Lacewing::Webserver::Request& Request)
       {
         return this->sessions.access()->find(Request.Cookie("session"))->second;
       } else {
-        fprintf(stdout, "Cookie is expired for session: %s\n", Request.Cookie("session"));
+        fprintf(stdout, "Cookie is expired for session: %s, expired at %ld\n", Request.Cookie("session"), this->sessions.access()->find(Request.Cookie("session"))->second->get_expires());
         if(this->sessions.access()->count(Request.Cookie("session")) == 1)
         {
           fprintf(stdout, "Cookie is %s\n", Request.Cookie("session"));
@@ -268,14 +268,20 @@ stumpd::authentication::load_sessions()
     closedir(dir);
     return 0;
   } else {
-    fprintf(
-      stderr,
-      "Could not open session dir %s: %s\n",
-      SESSION_PERSIST_PATH,
-      strerror(errno));
-    free(file_buf);
-    free(session_buf);
-    return 1;
+    if(mkdir(SESSION_PERSIST_PATH, S_IRUSR|S_IWUSR|S_IXUSR|S_IRGRP|S_IWGRP|S_IXGRP) != 0)
+    {
+      fprintf(
+        stderr,
+        "Could not create path %s: %s\n",
+        SESSION_PERSIST_PATH,
+        strerror(errno));
+      free(file_buf);
+      free(session_buf);
+      return 1;
+    } else {
+      fprintf(stdout, "Created session dir %s\n", SESSION_PERSIST_PATH);
+      return 0;
+    }
   }
 }
 
