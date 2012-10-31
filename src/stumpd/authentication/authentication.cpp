@@ -1,15 +1,17 @@
 #include <stumpd/authentication/authentication.hpp>
 #include <stumpd/authentication/authentication_session.hpp>
 
+lwsync::critical_resource < std::map<std::string,stumpd::authentication_session*> > stumpd::authentication::sessions;
+
 // Evaluate based on Basic auth ONLY
 stumpd::authentication_session*
 stumpd::authentication::ask(Lacewing::Webserver::Request& Request)
 {
-  fprintf(stdout, "Cookie header is: %s\n", Request.Header("cookie"));
+  //fprintf(stdout, "Cookie header is: %s\n", Request.Header("cookie"));
   std::string authorization_header(Request.Header("Authorization"));
   if(authorization_header.length() != 0)
   {
-    fprintf(stdout, "Auth header is set\n");
+    //fprintf(stdout, "Auth header is set\n");
     std::vector<std::string> split_authorization_header;
     split_authorization_header = stumpd::utilities::split(authorization_header.c_str(), ' ');
 
@@ -71,9 +73,11 @@ stumpd::authentication::ask(Lacewing::Webserver::Request& Request)
       session = this->ask_userpass(Request, Request.POST("username"), md5_password, true);
 
       free(md5_password);
+      if(session == NULL)
+        fprintf(stderr, "POST Login is returning a NULL----wtf!\n");
       return session;
     } else
-    fprintf(stdout, "Cookie session: %s\n", Request.Cookie("session"));
+    //fprintf(stdout, "Cookie session: %s\n", Request.Cookie("session"));
     if(strlen(Request.Cookie("session")) > 0)
     {
       fprintf(stdout, "Cookie login!\n");
@@ -120,7 +124,8 @@ stumpd::authentication::ask_userpass(Lacewing::Webserver::Request &Request, cons
           stumpd::authentication_session *session;
           session = new stumpd::authentication_session(username, password, doPersist);
 
-          this->sessions.access()->insert(std::pair<const char *, stumpd::authentication_session*>(session->get_session_id().c_str(), session));
+          stumpd::authentication::sessions.access()->insert(std::pair<const char *, stumpd::authentication_session*>(session->get_session_id().c_str(), session));
+          fprintf(stdout, "Just inserted session %s\n", session->get_session_id().c_str()); 
           fclose(fp);
           //free(session_id);
           free(line);
@@ -155,24 +160,25 @@ stumpd::authentication::ask_cookie(Lacewing::Webserver::Request& Request)
   if(strlen(Request.Cookie("session")) > 0)
   {
     // Check session value against valid sessions
-    if(this->sessions.access()->count(Request.Cookie("session")) > 0)
+    if(stumpd::authentication::sessions.access()->count(Request.Cookie("session")) > 0)
     {
-      if(this->sessions.access()->find(Request.Cookie("session"))->second->get_expires() > time(NULL))
+      fprintf(stdout, "SESSION EXPIRES: %ld\n", stumpd::authentication::sessions.access()->find(Request.Cookie("session"))->second->expires);
+      if(stumpd::authentication::sessions.access()->find(Request.Cookie("session"))->second->expires > time(NULL))
       {
-        return this->sessions.access()->find(Request.Cookie("session"))->second;
+        return stumpd::authentication::sessions.access()->find(Request.Cookie("session"))->second;
       } else {
-        fprintf(stdout, "Cookie is expired for session: %s, expired at %ld\n", Request.Cookie("session"), this->sessions.access()->find(Request.Cookie("session"))->second->get_expires());
-        if(this->sessions.access()->count(Request.Cookie("session")) == 1)
+        fprintf(stdout, "Cookie is expired for session: %s, expired at %ld\n", Request.Cookie("session"), stumpd::authentication::sessions.access()->find(Request.Cookie("session"))->second->expires);
+        if(stumpd::authentication::sessions.access()->count(Request.Cookie("session")) == 1)
         {
           fprintf(stdout, "Cookie is %s\n", Request.Cookie("session"));
-          //delete(this->sessions.access()->find(Request.Cookie("session"))->second);
-          //this->sessions.access()->find(Request.Cookie("session"))->second = NULL;
-          this->sessions.access()->erase(Request.Cookie("session"));
+          //delete(stumpd::authentication::sessions.access()->find(Request.Cookie("session"))->second);
+          //stumpd::authentication::sessions.access()->find(Request.Cookie("session"))->second = NULL;
+          stumpd::authentication::sessions.access()->erase(Request.Cookie("session"));
         }
         return NULL;
       } 
     } else {
-      fprintf(stdout, "No such session id in stored sessions: '%s', len: %ld, size: %ld\n", Request.Cookie("session"), strlen(Request.Cookie("session")), this->sessions.access()->size());
+      fprintf(stdout, "No such session id in stored sessions: '%s', len: %ld, size: %ld\n", Request.Cookie("session"), strlen(Request.Cookie("session")), stumpd::authentication::sessions.access()->size());
       return NULL;
     }
   } else {
@@ -236,7 +242,7 @@ stumpd::authentication::load_sessions()
           split_session = stumpd::utilities::split(session_buf, ',');
           fprintf(stdout, "split_session size: %ld\n", split_session.size());
 
-          this->sessions.access()->insert(
+          stumpd::authentication::sessions.access()->insert(
             std::pair<std::string,stumpd::authentication_session*>(
               split_session[4],
               new stumpd::authentication_session(
@@ -307,9 +313,9 @@ stumpd::authentication::logout(Lacewing::Webserver::Request& Request)
       &stat_buf
     );
     
-    if(this->sessions.access()->count(Request.Cookie("session")) == 1)
+    if(stumpd::authentication::sessions.access()->count(Request.Cookie("session")) == 1)
     {
-      this->sessions.access()->erase(Request.Cookie("session"));
+      stumpd::authentication::sessions.access()->erase(Request.Cookie("session"));
     
       if(S_ISREG(stat_buf.st_mode))
       {

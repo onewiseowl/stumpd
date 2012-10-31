@@ -32,7 +32,7 @@ namespace stumpd {
 
   class authentication {
     protected:
-      lwsync::critical_resource < std::map<std::string,stumpd::authentication_session*> > sessions;
+      static lwsync::critical_resource < std::map<std::string,stumpd::authentication_session*> > sessions;
       authentication_session * (*auth_source)(authentication* auth, const char* key, const char* value);
       int load_sessions();
       friend authentication_session * htpasswd_auth_source(class authentication* auth, const char* username, const char* password);
@@ -72,18 +72,18 @@ namespace stumpd {
         std::map <std::string,stumpd::authentication_session*>::iterator i;
 
         /*
-        for(i=0;i<this->sessions.access()->size();i++)
+        for(i=0;i<stumpd::authentication::sessions.access()->size();i++)
         {
-          delete(this->sessions.access()->back());
-          this->sessions.access()->pop_back();
+          delete(stumpd::authentication::sessions.access()->back());
+          stumpd::authentication::sessions.access()->pop_back();
         }
         */
        
-        for(i=this->sessions.access()->begin();i != this->sessions.access()->end(); i++)
+        for(i=stumpd::authentication::sessions.access()->begin();i != stumpd::authentication::sessions.access()->end(); i++)
         {
           delete(i->second);
           i->second = NULL;
-          this->sessions.access()->erase(i->first);
+          stumpd::authentication::sessions.access()->erase(i->first);
         }
 
       }

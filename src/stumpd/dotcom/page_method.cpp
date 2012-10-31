@@ -11,11 +11,11 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
   ret = 0;
   session = NULL;
 
-  fprintf(stdout, "Just got a request for \"%s\" : length %ld\n", Request.URL(), strlen(Request.URL()));
+  //fprintf(stdout, "Just got a request for \"%s\" : length %ld\n", Request.URL(), strlen(Request.URL()));
 
   if(strlen(Request.URL()) <= 1)// || (strlen(Request.URL()) == 1 && strncmp(Request.URL(), "/", 1) == 0))
   {  
-    fprintf(stdout, "Sending index\n");
+    //fprintf(stdout, "Sending index\n");
     if(this->auth->ask(Request) != NULL)
     {
       Request.Header("Location", "/search"); 

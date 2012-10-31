@@ -21,9 +21,8 @@ namespace stumpd {
   authentication_session
   {
     protected:
-      time_t created;
+      const time_t created;
       time_t updated;
-      time_t expires;
       std::string username;
       std::string password;
       std::string session_id;
@@ -32,7 +31,10 @@ namespace stumpd {
       persist();
 
     public:
-      authentication_session(std::string new_username, std::string new_password, bool doPersist = true)
+      time_t expires;
+      authentication_session(std::string new_username, std::string new_password, bool doPersist = true) :
+      created(time(NULL)),
+      expires(created + 86400)
       {
         username = new_username;
         password = new_password;
@@ -53,50 +55,58 @@ namespace stumpd {
         session_id.assign(session_id_buf);
 
 
-        this->created = time(NULL);
-        this->updated = this->created;
-        this->expires = this->created + 86400;
+        //this->created = time(NULL);
+        //this->updated = this->created;
+        //this->expires = this->created + 86400;
 
         free(session_id_buf);
         free(session_id_buf_md5);
-      
+     
+        fprintf(stdout, "Setting this session to expire at %ld\n", this->expires);
+ 
         if(doPersist == true)
           this->persist();
  
       }
-      authentication_session(const authentication_session& session)
+
+      
+      authentication_session(const authentication_session& session) :
+      created(time(NULL)),
+      expires(created + 86400)
       {
         fprintf(stdout, "authentication_session copy constructor going on, and session_id is: %s\n", session.session_id.c_str());
         this->username.assign(session.username);
         this->password.assign(session.password);
         this->session_id.assign(session.session_id);
-        this->created = session.created;
-        this->updated = session.updated;
-        this->expires = session.expires;
+        //this->created = session.created;
+        //this->updated = session.updated;
+        //this->expires = session.expires;
       }
+      
 
+      
       authentication_session(
         time_t _created,
         time_t _updated,
         time_t _expires,
         std::string _username,
         std::string _session_id
-      )
+      ) :
+      created(_created),
+      updated(_updated),
+      expires(_expires)
       {
         this->username.assign(_username);
         this->session_id.assign(_session_id);
-        this->created = _created;
-        this->updated = _updated;
-        this->expires = _expires;
       }
       
       void
       update(std::string new_session_id);
-      time_t
+      const time_t
       get_created(void);
-      time_t
+      const time_t
       get_updated(void);
-      time_t
+      const time_t
       get_expires(void);
       std::string
       get_username(void);

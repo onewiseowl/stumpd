@@ -41,7 +41,7 @@ stumpd::dotcom::api_login(Lacewing::Webserver &Webserver, Lacewing::Webserver::R
     free(str_time);
     //free(tm_buf);
     // shove session into active sessions map
-    //this->sessions
+    //stumpd::authentication::sessions
     delete session;
     return 0;
 

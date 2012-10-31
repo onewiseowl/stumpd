@@ -6,19 +6,19 @@ stumpd::authentication_session::update(std::string new_session_id)
   this->session_id.assign(new_session_id);
 }
 
-time_t
+const time_t
 stumpd::authentication_session::get_created(void)
 {
   return this->created;
 }
 
-time_t
+const time_t
 stumpd::authentication_session::get_expires(void)
 {
   return this->expires;
 }
 
-time_t
+const time_t
 stumpd::authentication_session::get_updated(void)
 {
   return this->updated;
