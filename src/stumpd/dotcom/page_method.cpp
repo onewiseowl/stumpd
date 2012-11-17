@@ -101,7 +101,7 @@ stumpd::dotcom::page_method(Lacewing::Webserver &Webserver, Lacewing::Webserver:
       // placeholder for dotcom API functionality (mostly just for upload/login etc)
       
       // We leave it up to the API to set Request.Status
-      if(strcmp(Request.POST("action"), "login") == 0)
+      if(strcmp(Request.Header("x-stump-action"), "login") == 0)
       {
         //fprintf(stdout, "Processing API request\n");
         this->api(Webserver, Request);

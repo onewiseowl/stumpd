@@ -59,7 +59,7 @@ stumpd::authentication::ask(Lacewing::Webserver::Request& Request)
 
     } else
     // Not a cookie based login, must be a pure form based login
-    if(strncmp("login", Request.POST("action"), 5) == 0)
+    if(strncmp("login", Request.Header("x-stump-action"), 5) == 0)
     {
       fprintf(stdout, "POST login!\n");
 

@@ -23,7 +23,7 @@ namespace stumpd {
 
     public:
       udp_server() {
-        this->udp_server_filter.LocalPort(8081);
+        this->udp_server_filter.LocalPort(5140);
         this->udp_server_filter.Reuse(true);
         this->udp_server_filter.IPv6(false);
         this->server = new Lacewing::UDP(this->udp_server_eventpump);

@@ -89,7 +89,7 @@ $.extend(widgets, {
                   id: '_filterList_table_edit_textarea',
                   name: '_filterList_table_edit_textarea',
                   class: '_filterList_table_edit_textarea'
-                })
+                }).val('function(var data) {\n\n}\n')
               )
             );
             //editAreaLoader.hide('_filterList_table_edit_textarea');
@@ -115,7 +115,7 @@ $.extend(widgets, {
               min_width: 965,
               min_height: 300,
               toolbar: 'undo, redo, search, save',
-              save_callback: 'widgets.tools.filters.add.submit();',
+              save_callback: 'widgets.tools.filters.add.submit()',
               syntax: 'js'
             });
             //editAreaLoader.show('_filterList_table_edit_textarea');
@@ -144,7 +144,7 @@ $.extend(widgets, {
             )
           );
           //editAreaLoader.hide('_filterList_table_edit_textarea');
-          $('textarea#_filterList_table_edit_textarea').val($.base64.decode(widgets.tools.filters.list[id][2]));
+          $('textarea#_filterList_table_edit_textarea').val(widgets.tools.filters.list[id][2]);
           var m = $('div#_filterList_table_edit_div').
             dialog({
               modal: true,
@@ -196,7 +196,7 @@ $.extend(widgets, {
             temp_data = eval(data);
             for(i in temp_data)
             {
-              temp_data[i][1] = $.base64.decode(temp_data[i][1]);
+              temp_data[i][2] = $.base64.decode(temp_data[i][2]);
             }
             widgets.tools.filters.list = temp_data
             delete temp_data;
@@ -315,7 +315,8 @@ $.extend(widgets, {
             )
           );
           //editAreaLoader.hide('_filterList_table_edit_textarea');
-          $('textarea#_filterList_table_edit_textarea').val($.base64.decode(widgets.tools.triggers.list[id][2]));
+          alert("Trigger list empty");
+          $('textarea#_filterList_table_edit_textarea').val(widgets.tools.triggers.list[id][2]);
           var m = $('div#_filterList_table_edit_div').
             dialog({
               modal: true,
@@ -365,6 +366,7 @@ $.extend(widgets, {
             temp_data = eval(data);
             for(i in temp_data)
             {
+              alert("GET for existing triggers failed");
               temp_data[i][1] = $.base64.decode(temp_data[i][1]);
             }
             widgets.tools.triggers.list = temp_data;
@@ -462,7 +464,7 @@ $.extend(widgets, {
           return 0;
         },
         error : function(jqXHR, textStatus, errorThrown) {
-          alert('Code interpretation error: ' + errorThrown + " " + textStatus);
+          alert('Code interpretation error: ' + errorThrown + " " + textStatus + " : " + jqXHR.responseText);
           return 1;
         }
       });
@@ -489,7 +491,8 @@ $.extend(widgets, {
               id: '_jsInterpreter_submit',
               name: '_jsInterpreter_submit',
               class: '_jsInterpreter_submit',
-              href : 'Javascript: widgets.tools.interpreter.submit($.base64.encode(editAreaLoader.getValue(\'_jsInterpreter_textarea\')))'
+              href : 'Javascript: void(0)',
+              onClick : 'Javascript: widgets.tools.interpreter.submit($.base64.encode(editAreaLoader.getValue(\'_jsInterpreter_textarea\')));'
             }).text('Check syntax')
           )
         );

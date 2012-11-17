@@ -16,8 +16,10 @@ $.extend(widgets, {
         $.ajax({
           url : '/api',
           type : 'POST',
+          headers : {
+            'x-stump-action' : 'login'
+          },
           data : {
-            action : 'login',
             username : $('#_loginBox_username_input')[0].value,
             password : $('#_loginBox_password_input')[0].value
           },

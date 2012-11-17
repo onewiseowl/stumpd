@@ -142,7 +142,7 @@ $.extend(widgets, {
 
       widgets.search.table.drawSpinner();
 
-      var jquery_data = "action=search&";
+      var jquery_data;
       var split_queryInput = $("input#_queryInput")[0].value.split(/", /);
       var i = 0;
       for (i=0;i<split_queryInput.length-1;i++)
@@ -167,8 +167,11 @@ $.extend(widgets, {
       jquery_data = jquery_data.substring(0, jquery_data.length - 1);
       $.ajax({
         url : "/api",
-        type : "POST",
+        type : "GET",
         async : true,
+        headers : {
+          'x-stump-action' : 'search'
+        },
         data : jquery_data,
         success : function(data, textStatus, jqXHR) {
           var json_data = eval(data);
@@ -182,10 +185,10 @@ $.extend(widgets, {
       getInputs : function() {
         $.ajax({
           url : "/api",
-          type : "POST",
+          type : "GET",
           async : true,
-          data : {
-            action : "getInputs"
+          headers : {
+          'x-stump-action' : 'search'
           },
           success : function(data, textStatus, jqXHR) {
             var json_data = eval(data);
@@ -200,10 +203,10 @@ $.extend(widgets, {
       getHosts : function() {
         $.ajax({
           url : "/api",
-          type : "POST",
+          type : "GET",
           async : true,
-          data : {
-            action : "getHosts"
+          headers : {
+            'x-stump-action' : "getHosts"
           },
           success : function(data, textStatus, jqXHR) {
             var json_data = eval(data);

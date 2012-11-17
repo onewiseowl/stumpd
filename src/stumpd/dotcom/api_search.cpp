@@ -17,30 +17,30 @@ stumpd::dotcom::api_search(Lacewing::Webserver &Webserver, Lacewing::Webserver::
   
   std::string query_string;
 
-  if(strlen(Request.POST("query")) > 0)
+  if(strlen(Request.GET("query")) > 0)
   {
   
-    query_string = Request.POST("query");
+    query_string = Request.GET("query");
 
   }
   
-  if(strlen(Request.POST("dateFrom")) > 0)
+  if(strlen(Request.GET("dateFrom")) > 0)
   {
     from_date = 
-      strtol(Request.POST("dateFrom"), NULL, 0);
+      strtol(Request.GET("dateFrom"), NULL, 0);
     
-    if(strlen(Request.POST("dateTo")) > 0)
+    if(strlen(Request.GET("dateTo")) > 0)
     {
       to_date = 
-        strtol(Request.POST("dateTo"), NULL, 0);
+        strtol(Request.GET("dateTo"), NULL, 0);
           
-      if(strlen(Request.POST("inputs")) > 0)
+      if(strlen(Request.GET("inputs")) > 0)
       {
-        inputs = stumpd::utilities::split(Request.POST("inputs"), ',');
+        inputs = stumpd::utilities::split(Request.GET("inputs"), ',');
           
-        if(strlen(Request.POST("hosts")) > 0)
+        if(strlen(Request.GET("hosts")) > 0)
         {
-          hosts = stumpd::utilities::split(Request.POST("hosts"), ',');
+          hosts = stumpd::utilities::split(Request.GET("hosts"), ',');
           //fprintf(stdout, "hosts: %s\n", hosts[0].c_str());
         } else {
           fprintf(stderr, "No hosts\n");

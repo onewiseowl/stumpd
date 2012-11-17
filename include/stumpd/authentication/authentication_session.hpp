@@ -31,7 +31,7 @@ namespace stumpd {
       persist();
 
     public:
-      time_t expires;
+      const time_t expires;
       authentication_session(std::string new_username, std::string new_password, bool doPersist = true) :
       created(time(NULL)),
       expires(created + 86400)

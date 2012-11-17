@@ -63,6 +63,7 @@ namespace stumpd {
           //Handle<String> source; // = String::New("var test = 'Hello' + ', World!'; test;");
           //Handle<Script> script; // = Script::Compile(source);
           //HandleScope handle_scope;
+          std::string _exception;
           int a;  
 
          public:
@@ -72,6 +73,7 @@ namespace stumpd {
            test(const char *);
            std::string
            execute(const char *);
+           const char *exception();
        };
 
       v8_worker*

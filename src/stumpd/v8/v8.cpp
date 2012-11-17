@@ -67,6 +67,12 @@ stumpd::v8_pool::grab()
   return worker;
 }
 
+const char *
+stumpd::v8_pool::v8_worker::exception()
+{
+  return this->_exception.c_str();
+}
+
 int
 stumpd::v8_pool::v8_worker::release()
 {
@@ -109,13 +115,7 @@ stumpd::v8_pool::v8_worker::test(const char *script_string)
 
   // Compile the source code.
   Handle<Script> script;
-  try {
-    script = Script::Compile(source);
-  } catch(v8::TryCatch* try_catch) {
-    fprintf(stderr, "v8 compilation error in script: %s\n", script_str.c_str());
-    ReportException(&trycatch);
-    return 1;
-  }
+  script = Script::Compile(source);
 
   if(!script.IsEmpty())
   {
@@ -124,7 +124,10 @@ stumpd::v8_pool::v8_worker::test(const char *script_string)
     return 0;
   } else {
   //  ReportException(&trycatch);
-    fprintf(stderr, "v8 compilation error, IsEmpty, in script: %s\n", script_str.c_str());
+    ReportException(&trycatch);
+    v8::String::Utf8Value v8_exception(trycatch.Exception());
+    fprintf(stderr, "v8 compilation error: \n%s", ToCString(v8_exception));
+    this->_exception.assign(ToCString(v8_exception));
     context.Dispose();
     lock.StopPreemption();
     return 1;
