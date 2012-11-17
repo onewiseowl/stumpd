@@ -11,8 +11,10 @@ $.extend(widgets, {
             type : "POST",
             async : false,
             timeout: 2000,
+              headers : {
+                'x-stump-action' : 'updateFilter'
+              },
             data : {
-              action : 'updateFilter',
               alias : $.base64.encode(widgets.tools.filters.list[id][1]),
               filter : $.base64.encode(editAreaLoader.getValue('_filterList_table_edit_textarea')),
               id : widgets.tools.filters.list[id][0]
@@ -43,8 +45,10 @@ $.extend(widgets, {
               type : "POST",
               async : false,
               timeout: 2000,
+              headers : {
+                'x-stump-action' : 'addFilter'
+              },
               data : {
-                action : 'addFilter',
                 alias : $.base64.encode($('input#_addFilter_alias_input').val()),
                 filter : $.base64.encode(editAreaLoader.getValue('_filterList_table_edit_textarea')),
               },
@@ -178,11 +182,11 @@ $.extend(widgets, {
       getExisting : function() {
         $.ajax({
         url : '/api',
-        type : 'POST',
+        type : 'GET',
         async : false,
         timeout: 2000,
-        data : {
-          action : 'getFilters'
+        headers : {
+          'x-stump-action' : 'updateFilter'
         },
         complete : function(jqXHR, textStatus)
         {
@@ -348,11 +352,11 @@ $.extend(widgets, {
       getExisting : function() {
         $.ajax({
         url : "/api",
-        type : "POST",
+        type : "GET",
         async : false,
         timeout: 2000,
-        data : {
-          action : 'getTriggers'
+        headers : {
+          'x-stump-action' : 'getTriggers'
         },
         complete : function(jqXHR, textStatus)
         {
@@ -455,8 +459,10 @@ $.extend(widgets, {
         type : "POST",
         async : true,
         contentType: 'application/x-www-form-urlencoded',
+        headers : {
+          'x-stump-action' : 'testScript'
+        },
         data : {
-          action : 'testScript',
           script : data
         },
         success : function(data, textStatus, jqXHR) {

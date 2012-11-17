@@ -152,7 +152,7 @@ size_t
 stumpd::insert::insert_json_data(std::string json_data)
 {
 
-  // curl -D /dev/stdout -d 'action=insert&documents=[{"date":"1341941621","host":"ganja.onewiseowl.com","input":"/var/log/auth.log","content":"Jul 10 10:35:19 ganja sudo: pam_unix(sudo:session): session opened for user root by cdickey(uid=1000"}]' http://10.10.0.2:8081/api
+  // curl -X POST -D - -H 'x-stump-action: insert' -d 'documents=[{"date":"1341941621","host":"ganja.onewiseowl.com","input":"/var/log/auth.log","content":"Jul 10 10:35:19 ganja sudo: pam_unix(sudo:session): session opened for user root by cdickey(uid=1000"}]' http://10.10.0.2:8081/api
 
 
   size_t document_count;
