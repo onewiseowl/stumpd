@@ -11,7 +11,7 @@
 #include <string>
 #include <iostream>
 
-#include <Lacewing.h>
+#include <lacewing.h>
 
 #define SESSION_PERSIST_PATH "/tmp/dotcom_sessions"
 

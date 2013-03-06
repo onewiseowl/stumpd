@@ -12,7 +12,7 @@
 #include <unistd.h>
 
 
-#include <Lacewing.h>
+#include <lacewing.h>
 #include <lwsync/critical_resource.hpp>
 #include <lwsync/monitor.hpp>
 #include <stumpd/utilities/split.hpp>

@@ -8,7 +8,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include <Lacewing.h>
+#include <lacewing.h>
 #include <stumpd/set_cli_opts.hpp>
 #include <stumpd/load_config.hpp>
 #include <stumpd/database/mysql.hpp>

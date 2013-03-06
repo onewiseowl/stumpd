@@ -13,7 +13,7 @@
 #include <time.h>
 #include <iostream>
 
-#include <Lacewing.h>
+#include <lacewing.h>
 
 #include <stumpd/authentication/authentication.hpp>
 #include <stumpd/load_config.hpp>

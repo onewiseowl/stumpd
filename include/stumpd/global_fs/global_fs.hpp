@@ -5,7 +5,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <stdio.h>
-#include <Lacewing.h>
+#include <lacewing.h>
 
 #include <stumpd/load_config.hpp>
 #include <stumpd/authentication/authentication.hpp>
