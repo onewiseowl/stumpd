@@ -188,7 +188,7 @@ $.extend(widgets, {
           type : "GET",
           async : true,
           headers : {
-          'x-stump-action' : 'search'
+          'x-stump-action' : 'getInputs'
           },
           success : function(data, textStatus, jqXHR) {
             var json_data = eval(data);
@@ -210,6 +210,7 @@ $.extend(widgets, {
           },
           success : function(data, textStatus, jqXHR) {
             var json_data = eval(data);
+            alert(JSON.stringify(json_data));
             for(i in json_data.hosts)
             {
               widgets.search.searchables.hosts.push({label : json_data.hosts[i], value : json_data.hosts[i]});
