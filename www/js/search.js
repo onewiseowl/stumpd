@@ -127,14 +127,14 @@ $.extend(widgets, {
     ],
     searchables : {
       "hosts" : [
-        {
-          label : 'myvpv01.corp.verifi.com',
-          value : 'myvpv01.corp.verifi.com'
-        },
-        {
-          label : 'cdrn3dbsv01.corp.verifi.com',
-          value : 'cdrn3dbsv01.corp.verifi.com'
-        }
+        //{
+        //  label : 'myvpv01.corp.verifi.com',
+        //  value : 'myvpv01.corp.verifi.com'
+        //},
+        //{
+        //  label : 'cdrn3dbsv01.corp.verifi.com',
+        //  value : 'cdrn3dbsv01.corp.verifi.com'
+        //}
       ],
       "inputs" : []
     },
@@ -142,11 +142,13 @@ $.extend(widgets, {
 
       widgets.search.table.drawSpinner();
 
-      var jquery_data;
+      var jquery_data = "";;
       var split_queryInput = $("input#_queryInput")[0].value.split(/", /);
       var i = 0;
       for (i=0;i<split_queryInput.length-1;i++)
       {
+        
+        console.log("jquery_data: " + jquery_data);
         jquery_data += split_queryInput[i].split(/:/)[0];
         jquery_data += '=';
         if(split_queryInput[i].split(/:/)[0] == "dateFrom" || split_queryInput[i].split(/:/)[0] == "dateTo")
@@ -160,7 +162,9 @@ $.extend(widgets, {
             return 1;
           }
         } else {
+          console.log("jquery_data: " + jquery_data);
           jquery_data += split_queryInput[i].split(/:/)[1].substring(1, split_queryInput[i].split(/:/)[1].length);
+          console.log("jquery_data: " + jquery_data + "\n\n");
         }
         jquery_data += '&';  
       }
@@ -259,7 +263,6 @@ $.extend(widgets, {
             // determine if cursor is between two quotes
             if(request.term.substring(request.term.length - 3,request.term.length) == '", ')
             {
-              // get searchable current command type
               var delim;
 
               var startPos,endPos;
@@ -279,8 +282,6 @@ $.extend(widgets, {
               startPos = position;
               var currentCommand = $('input#_queryInput')[0].value.substring(startPos, endPos).trim();
 
-              //console.log("currentCommand: " + currentCommand);
-
               var terms = request.term.split(/"/);
               function term_position(term_buf) {
                 var total_size = 0;
@@ -295,16 +296,17 @@ $.extend(widgets, {
                 }
                 return i-2;
               }
-
-              if(terms[term_position(terms)].match(/,/) != null)
+              if(widgets.search.searchables[currentCommand])
               {
-                var sub_terms = terms[term_position(terms)].split(/,/);
-                
-                response( $.ui.autocomplete.filter(
-                  widgets.search.searchables[currentCommand], sub_terms.pop() ) );
-              } else {
-                response( $.ui.autocomplete.filter(
-                  widgets.search.searchables[currentCommand], terms[term_position(terms)] ) );
+                if(terms[term_position(terms)].match(/,/) != null)
+                {
+                  var sub_terms = terms[term_position(terms)].split(/,/);
+                  response( $.ui.autocomplete.filter(
+                    widgets.search.searchables[currentCommand], sub_terms.pop() ) );
+                } else {
+                  response( $.ui.autocomplete.filter(
+                    widgets.search.searchables[currentCommand], terms[term_position(terms)] ) );
+                }
               }
             } else {
             response( $.ui.autocomplete.filter(
