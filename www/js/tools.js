@@ -30,7 +30,7 @@ $.extend(widgets, {
               try {
                 widgets.tools.filters.getExisting();
               } catch(e) {
-                alert(e);
+                console.log(e);
               }
             }
           });
@@ -63,7 +63,7 @@ $.extend(widgets, {
                 try {
                   widgets.tools.filters.getExisting();
                 } catch(e) {
-                  alert(e);
+                  console.log(e);
                 }
               }
             });
@@ -106,7 +106,7 @@ $.extend(widgets, {
                   try {
                     editAreaLoader.delete_instance('_filterList_table_edit_textarea');
                   } catch(e) {
-                    alert(e);
+                    console.log(e);
                   }
                 }
               });
@@ -124,7 +124,7 @@ $.extend(widgets, {
             });
             //editAreaLoader.show('_filterList_table_edit_textarea');
           } catch(e) {
-            alert(e);
+            console.log(e);
           }
         }
       }),
@@ -158,7 +158,7 @@ $.extend(widgets, {
                 try {
                   editAreaLoader.delete_instance('_filterList_table_edit_textarea');
                 } catch(e) {
-                  alert(e);
+                  console.log(e);
                 }
               }
             });
@@ -176,7 +176,7 @@ $.extend(widgets, {
           });
           //editAreaLoader.show('_filterList_table_edit_textarea');
         } catch(e) {
-          alert(e);
+          console.log(e);
         }
       },
       getExisting : function() {
@@ -206,7 +206,7 @@ $.extend(widgets, {
             delete temp_data;
           
           } catch(e) {
-            alert(e);
+            console.log(e);
           }
         }
       });
@@ -319,7 +319,7 @@ $.extend(widgets, {
             )
           );
           //editAreaLoader.hide('_filterList_table_edit_textarea');
-          alert("Trigger list empty");
+          //alert("Trigger list empty");
           $('textarea#_filterList_table_edit_textarea').val(widgets.tools.triggers.list[id][2]);
           var m = $('div#_filterList_table_edit_div').
             dialog({
@@ -330,7 +330,7 @@ $.extend(widgets, {
                 try {
                   editAreaLoader.delete_instance('_filterList_table_edit_textarea');
                 } catch(e) {
-                  alert(e);
+                  console.log(e);
                 }
               }
             });
@@ -346,7 +346,7 @@ $.extend(widgets, {
           });
           //editAreaLoader.show('_filterList_table_edit_textarea');
         } catch(e) {
-          alert(e);
+          console.log(e);
         }
       },
       getExisting : function() {
@@ -376,7 +376,7 @@ $.extend(widgets, {
             widgets.tools.triggers.list = temp_data;
             delete temp_data;
           } catch(e) {
-            alert(e);
+            console.log(e);
           }
         }
       });
@@ -388,13 +388,20 @@ $.extend(widgets, {
           {
             $('div#_toolsSubMenu').empty().remove();
           }
-
           $('body').append(
             $('<div></div>').attr({
               id : '_toolsSubMenu',
               name : '_toolsSubMenu',
               class : '_toolsSubMenu'
             }).append(
+              $('<a></a>').attr({
+                id : '_addTrigger_link',
+                name : '_addTrigger_link',
+                class : '_addTrigger_link',
+                href : 'Javascript: widgets.tools.triggers.add.draw();'
+              }).text('+ add new trigger'),
+              $('<br></br>'),
+              $('<br></br>'),
               $('<table></table>').attr({
                 id : '_filterList_table',
                 name : '_filterList_table',
@@ -466,7 +473,7 @@ $.extend(widgets, {
           script : data
         },
         success : function(data, textStatus, jqXHR) {
-          alert('Code successfully interpreted');
+          //alert('Code successfully interpreted');
           return 0;
         },
         error : function(jqXHR, textStatus, errorThrown) {

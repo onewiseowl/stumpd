@@ -158,7 +158,8 @@ $.extend(widgets, {
           {
             jquery_data += new String(Date.parse(split_queryInput[i].split(/:/)[1].substring(1, split_queryInput[i].split(/:/)[1].length)).valueOf()).substring(0,10);
           } catch(e) {
-            alert("Error: could not parse " + split_queryInput[i].split(/:/)[0] + "\nbad formatting: " + e + "\n" + split_queryInput[i].split(/:/)[1].substring(1, split_queryInput[i].split(/:/)[1].length));
+            //alert("Error: could not parse " + split_queryInput[i].split(/:/)[0] + "\nbad formatting: " + e + "\n" + split_queryInput[i].split(/:/)[1].substring(1, split_queryInput[i].split(/:/)[1].length));
+            console.log("Error: could not parse " + split_queryInput[i].split(/:/)[0] + "\nbad formatting: " + e + "\n" + split_queryInput[i].split(/:/)[1].substring(1, split_queryInput[i].split(/:/)[1].length));
             return 1;
           }
         } else {
@@ -214,7 +215,7 @@ $.extend(widgets, {
           },
           success : function(data, textStatus, jqXHR) {
             var json_data = eval(data);
-            alert(JSON.stringify(json_data));
+            //alert(JSON.stringify(json_data));
             for(i in json_data.hosts)
             {
               widgets.search.searchables.hosts.push({label : json_data.hosts[i], value : json_data.hosts[i]});
@@ -248,7 +249,7 @@ $.extend(widgets, {
         $.grep(widgets.search.searchCommands, function(item){
           if (item.label == str)
           {
-            alert(item.data);
+            //alert(item.data);
           }
         });
       }
